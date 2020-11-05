@@ -1,6 +1,6 @@
-version: "3"
+version: "2"
 services:
-  app:
+  ctf1:
     build: .
     ports:
-        - '8000:8000'
+        - '10000:80'
