@@ -6,8 +6,9 @@ name: "4"
 author: "Arjen Wiersma"
 category: Advent
 description: |
+  There are people who think you can hide important things by making it hard to read.
 
-  http://localhost:10011
+  URL: http://localhost:10011
 value: 400
 type: standard
 

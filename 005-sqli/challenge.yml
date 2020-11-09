@@ -6,8 +6,9 @@ name: "5"
 author: "Arjen Wiersma"
 category: Advent
 description: |
+  Again a login form stands in your way. What powerful 'hacker' tool will help you proceed?
 
-  http://localhost:10100
+  URL: http://localhost:10100
 value: 500
 type: standard
 
