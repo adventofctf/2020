@@ -6,7 +6,7 @@ name: "XXX-XXE"
 author: "Arjen Wiersma"
 category: Advent
 description: |
-Just grab the flag from flag.php.
+  Just grab the flag from flag.php.
 
   http://localhost:15000
 value: 200

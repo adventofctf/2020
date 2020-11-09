@@ -30,9 +30,6 @@ setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"
             </div>
         </div>
 <?php
-var_dump($_GET);
-var_dump(base64_encode($_GET["username"] . '-NOVI'));
-
 if ($_GET["password"] == base64_encode($_GET["username"] . '-NOVI')) {
 ?>
 
