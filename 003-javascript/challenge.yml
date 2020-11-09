@@ -2,15 +2,14 @@
 # other tools to install and deploy your challenge.
 
 # Required sections
-name: "1"
+name: "3"
 author: "Arjen Wiersma"
 category: Advent
 description: |
-  All starts should be easy
+  For this challenge you will, again, need to bypass the login mechanism.
 
-  http://localhost:10000
-
-value: 100
+  http://localhost:10010
+value: 300
 type: standard
 
 # Settings used for Dockerfile deployment
@@ -23,13 +22,13 @@ image: .
 # Optional settings
 # Can be removed if unused
 # attempts: 5
-
+#
 # Flags specify answers that your challenge use. You should generally provide
 # at least one.
 # Can be removed if unused
 # Accepts strings or dictionaries
 flags:
-    - NOVI{L3T_7H3_M0NTH_0F_FUN_START}
+  - NOVI{javascript_is_not_safe}
 
 # Tags are used to classify your challenge with topics. You should provide at
 # least one.
@@ -48,16 +47,17 @@ tags:
 # Can be removed if unused
 # Accepts dictionaries or strings
 hints:
-    - Use the source luke!
+    - {
+        content: "Do you think Javascript is a safe place?",
+        cost: 150
+    }
 
 # Requirements are used to make a challenge require another challenge to be
 # solved before being available.
 # Can be removed if unused
 # Accepts challenge names as strings or challenge IDs as integers
-#requirements:
-#    - "Warmup"
-#    - "Are you alive"
-#    - 1
+requirements:
+    - "2"
 
 # The state of the challenge.
 # This is visible by default. It takes two values: hidden, visible.

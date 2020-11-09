@@ -2,7 +2,7 @@
 # other tools to install and deploy your challenge.
 
 # Required sections
-name: "002-cookie"
+name: "2"
 author: "Arjen Wiersma"
 category: Advent
 description: |
@@ -57,7 +57,7 @@ hints:
 # Can be removed if unused
 # Accepts challenge names as strings or challenge IDs as integers
 requirements:
-    - 001-Source
+    - "1"
 
 # The state of the challenge.
 # This is visible by default. It takes two values: hidden, visible.

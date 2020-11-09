@@ -1,6 +1,6 @@
-version: "2"
+version: "3"
 services:
-  ctf1:
+  ctf001:
     build: .
     ports:
         - '10000:80'
