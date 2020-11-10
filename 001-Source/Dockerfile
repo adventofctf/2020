@@ -25,5 +25,7 @@ COPY site.conf /etc/apache2/sites-enabled/000-default.conf
 
 COPY src/* /var/www/html/
 
+RUN chown -R www-data:www-data /var/www
+
 EXPOSE 80
 CMD ["/run.sh"]
