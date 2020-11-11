@@ -8,7 +8,7 @@ category: Advent
 description: |
   For the 2nd challenge you will need to bypass the login mechanism.
 
-  http://localhost:10001
+  Visit https://02.adventofctf.com to start the challenge.
 value: 200
 type: standard
 

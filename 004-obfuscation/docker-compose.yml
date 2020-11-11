@@ -3,4 +3,4 @@ services:
   ctf003:
     build: .
     ports:
-        - '10011:80'
+        - '10004:80'

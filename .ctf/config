@@ -1,5 +1,5 @@
 [config]
-url = http://localhost
+url = https://ctfd.adventofctf.com
 access_token = 749e245c3b74c27373f8613cc8a2f9af2b0626f760de2452e27ce5773055f1e9
 
 
