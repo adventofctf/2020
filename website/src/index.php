@@ -1,7 +1,3 @@
-<?php
-setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"false"])), time() + (86400 * 30), "/");
-?>
-
 <html class="no-js" lang="">
     <head>
         <meta charset="utf-8">
