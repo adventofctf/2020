@@ -17,7 +17,7 @@
         <div class="jumbotron bg-transparent mb-0 radius-0">
             <div class="container">
                 <div class="row">
-                    <div class="col-xl-6">
+                    <div class="col-xl-6 mx-auto">
                         <h1 class="display-2">Advent of CTF <span class="vim-caret">5</span></h1>
                         <div class="lead mb-3 text-mono text-warning">Your daily dose of CTF for December</div>
                     </div>
@@ -45,7 +45,7 @@
                     $loggedin=true;
         ?>
             <div class="row">
-                <div class="col-6 mx-auto"
+                <div class="col-xl-6 mx-auto"
                     <div class="card text-center">
                         <div class="card-header">
                             FLAG

@@ -6,7 +6,7 @@ setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>CTF 2</title>
+        <title>Advent of CTF 2</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -20,7 +20,7 @@ setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"
         <div class="jumbotron bg-transparent mb-0 radius-0">
             <div class="container">
                 <div class="row">
-                    <div class="col-xl-6">
+                    <div class="col-xl-6 mx-auto">
                         <h1 class="display-2">Advent of CTF <span class="vim-caret">2</span></h1>
                         <div class="lead mb-3 text-mono text-warning">Your daily dose of CTF for December</div>
 
