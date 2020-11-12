@@ -37,6 +37,7 @@ COPY site.conf /etc/apache2/sites-enabled/000-default.conf
 COPY src/* /var/www/html/
 
 RUN chown -R www-data:www-data /var/www
+RUN chmod -R og-rw /var/www
 RUN chown -R mysql:mysql /var/lib/mysql
 
 EXPOSE 80 3306
