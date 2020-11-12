@@ -6,6 +6,7 @@ name: "6"
 author: "Arjen Wiersma"
 category: Advent
 description: |
+  Search Santa's database of big secrets, you will probably find something useful.
 
   Visit https://06.adventofctf.com to start the challenge.
 value: 600
@@ -27,7 +28,7 @@ image: .
 # Can be removed if unused
 # Accepts strings or dictionaries
 flags:
-  - NOVI{}
+  - NOVI{7h1s_flag_w@s_chuncky_right}
 
 # Tags are used to classify your challenge with topics. You should provide at
 # least one.
@@ -47,7 +48,7 @@ tags:
 # Accepts dictionaries or strings
 hints:
     - {
-        content: "How many users would a database have?",
+        content: "If you can only see a few characters, perhaps you might need skip a few? Have you heard about our savior substring?",
         cost: 300
     }
 
