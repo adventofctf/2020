@@ -1,0 +1,6 @@
+version: "3"
+services:
+  ctf:
+    build: .
+    ports:
+        - '10023:3000'
