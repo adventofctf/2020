@@ -29,7 +29,7 @@ image: .
 # Can be removed if unused
 # Accepts strings or dictionaries
 flags:
-    - NOVI{do_n0t_trus7_obfuscation_t0_hide_th1ngs}
+    - NOVI{i_hacked_websockets_and_1_am_still_s@ne}
 
 # Tags are used to classify your challenge with topics. You should provide at
 # least one.
