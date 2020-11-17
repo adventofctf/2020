@@ -48,7 +48,7 @@ tags:
 # Can be removed if unused
 # Accepts dictionaries or strings
 hints:
-    - Use the source luke!
+    - Use the source, all secrets should be encoded right?
 
 # Requirements are used to make a challenge require another challenge to be
 # solved before being available.

@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM php:7.3-apache
 
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
@@ -9,7 +9,7 @@ RUN apt-get update
 # Postfix for mod-evasisve
 RUN echo "postfix postfix/mailname string rundeck.example.com" | debconf-set-selections && echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && apt-get install -y postfix
 # mod-evasive will allow throttling of users
-RUN apt-get install -y apache2 libapache2-mod-evasive supervisor && apt-get clean
+RUN apt-get install -y libapache2-mod-evasive supervisor && apt-get clean
 
 COPY evasive.conf /etc/apache2/mods-enabled/evasive.conf
 
