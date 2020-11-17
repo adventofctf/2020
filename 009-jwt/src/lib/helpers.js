@@ -28,7 +28,7 @@ function authFail(res, callback) {
 
 // generate a GUID
 function generateGUID() {
-  return new Date().getTime(); // we can do better with crypto
+  return Math.floor((Math.random() * 100000) + 1);
 }
 
 // create JWT
@@ -98,14 +98,19 @@ function authHandler(req, res){
 }
 
 function verify(token) {
-  var decoded = false;
-  jwt.verify(token, secret, function (err, payload) {
-    if (err) {
-      decoded = false; // still false
-    } else {
-      decoded = payload;
-    }
-  });
+  console.log(token);
+  try {
+    var decoded = false;
+    jwt.verify(token, secret, function (err, payload) {
+      if (err) {
+        decoded = false; // still false
+      } else {
+        decoded = payload;
+      }
+    });
+  } catch(error) {
+    decoded = false;
+  }
   return decoded;
 }
 
