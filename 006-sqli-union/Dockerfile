@@ -6,13 +6,8 @@ ENV DEBIAN_FRONTEND noninteractive
 MAINTAINER Arjen 'credmp' Wiersma
 
 RUN apt-get update
-# Postfix for mod-evasisve
-RUN echo "postfix postfix/mailname string rundeck.example.com" | debconf-set-selections && echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && apt-get install -y postfix
-# mod-evasive will allow throttling of users
-RUN apt-get install -y libapache2-mod-evasive supervisor && apt-get clean
-RUN apt-get -y install supervisor zip unzip git mariadb-server pwgen
+RUN apt-get -y install supervisor zip unzip git mariadb-server pwgen && apt-get clean
 
-COPY evasive.conf /etc/apache2/mods-enabled/evasive.conf
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 

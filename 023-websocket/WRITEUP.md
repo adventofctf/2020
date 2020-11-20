@@ -1,8 +1,5 @@
 # Write-up
 
-The flag is in the page source.
-
-
 ```javascript
 var socket = io();
 

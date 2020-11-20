@@ -36,11 +36,9 @@
                                 </button>
                                 <a class="navbar-brand" href="#!">naughty list</a>
 
-                                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                                    <form class="form-inline my-2 my-lg-0" actions="/index.php" method="post">
-                                        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search">
-                                    </form>
-                                </div>
+                                <form class="form-inline my-2 my-lg-0" actions="/index.php" method="post">
+                                    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search">
+                                </form>
                             </nav>
                         </div>
                         <div class="card-body">
@@ -89,7 +87,7 @@
                                 ?>
                         </div>
                         <div class="card-footer">
-                            Enter the username of the person on the naughty list and you will get a present.
+                            Enter the <b>username</b> of the person on the <b>naughty</b> list and you will get a present.
                         </div>
                     </div>
                 </div>

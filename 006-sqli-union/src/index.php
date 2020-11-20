@@ -36,11 +36,9 @@
                                 </button>
                                 <a class="navbar-brand" href="#!">Santabase</a>
 
-                                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                                    <form class="form-inline my-2 my-lg-0" actions="/index.php" method="post">
-                                        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search">
-                                    </form>
-                                </div>
+                                <form class="form-inline my-2 my-lg-0" actions="/index.php" method="post">
+                                    <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search">
+                                </form>
                             </nav>
                         </div>
                         <div class="card-body">
