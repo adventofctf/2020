@@ -29,7 +29,7 @@ image: .
 # Can be removed if unused
 # Accepts strings or dictionaries
 flags:
-    - NOVI{LFI_1s_ask1ng_f0r_tr0bl3_even_w1th_f1lters}
+    - NOVI{LFI_and_st1ll_you_f0und_it}
 
 # Tags are used to classify your challenge with topics. You should provide at
 # least one.
