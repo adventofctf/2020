@@ -49,7 +49,7 @@ tags:
 # Accepts dictionaries or strings
 hints:
     - {
-        content: "In the end this is an command injection, but what do you get to see?",
+        content: "In the end this is an command injection, but what do you get to see? Maybe you should expand your shell knowledge? ",
         cost: 600
     }
 
@@ -59,9 +59,6 @@ hints:
 # Accepts challenge names as strings or challenge IDs as integers
 requirements:
   - "11"
-#    - "Warmup"
-#    - "Are you alive"
-#    - 1
 
 # The state of the challenge.
 # This is visible by default. It takes two values: hidden, visible.

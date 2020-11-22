@@ -14,6 +14,10 @@ def index():
             p = request.values.get('place')
             if p != None:
                 try:
+                    # Filter on '&', ';', '-', '`' , '||', '|'
+                    not_allowed = '&;-`|' 
+                    p = ''.join(c for c in p if c not in not_allowed)
+                    p = p.replace('rm','')
                     cmd = './check %s' % p
                     result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable='/bin/bash')
                     err = result.stderr.decode('utf-8')
