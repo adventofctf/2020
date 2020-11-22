@@ -1,0 +1,5 @@
+Congratulations, here is a flag.
+
+NOVI{we_are_halfway_to_christmas!}
+
+Make sure to also claim your badge!
