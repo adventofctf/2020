@@ -51,11 +51,8 @@ define('MyConst', TRUE);
                             <div class="card-body">
                                 <?php
 
-                                $role = "direct";
-
-                                if ($_COOKIE["zeroten"]) {
+                                if ($_COOKIE["zerooneone"]) {
                                     $data = json_decode(base64_decode($_COOKIE["zerooneone"]), true);
-                                    $role = $data["role"];
                                 }
                                 if (!$data) {
                                     $data["path"] = ".";

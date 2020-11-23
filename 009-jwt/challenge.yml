@@ -48,7 +48,7 @@ tags:
 # Accepts dictionaries or strings
 hints:
     - {
-        content: "I remember some kind of flaw with JWT tokens...",
+        content: "I remember some kind of flaw with JWT tokens... Once you figure out what it is, remember that session management is important as well.",
         cost: 450
     }
 

@@ -1,7 +1,7 @@
 [config]
-url = http://localhost
-#access_token = 749e245c3b74c27373f8613cc8a2f9af2b0626f760de2452e27ce5773055f1e9
-access_token = a4a075f12009cf1d4eb5a076f1c1bda91b586797e492542f0838fa3d1e78d258
+url = https://ctfd.adventofctf.com
+access_token = 749e245c3b74c27373f8613cc8a2f9af2b0626f760de2452e27ce5773055f1e9
+#access_token = a4a075f12009cf1d4eb5a076f1c1bda91b586797e492542f0838fa3d1e78d258
 
 
 [challenges]
