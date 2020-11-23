@@ -1,0 +1,6 @@
+version: "3"
+services:
+  ctfx:
+    build: .
+    ports:
+        - '10013:80'
