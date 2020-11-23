@@ -28,9 +28,8 @@
                 </div>
 
                 <div class="row">
-                    <div class="card mb-6 mx-auto text-center bg-warning text-dark">
+                    <div class="card mb-6 mx-auto text-center bg-primary text-light">
                         <div class="card-body">
-                            <blockquote class="card-blockquote">
                                 <pre>
                                     <?php
                                     libxml_disable_entity_loader (false);
@@ -42,13 +41,14 @@
                                         $info = simplexml_import_dom($dom);
 
                                         echo htmlspecialchars( $info->asXML() );
+                                    } else {
+                                        echo "No content";
                                     }
 ?>
                                 </pre>
-                                <footer>This is the result of your
+                                <div>This is the result of your
                                     <cite title="Attack type">POST</cite>
-                                </footer>
-                            </blockquote>
+                                </div>
                         </div>
                     </div>
 

