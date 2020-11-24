@@ -1,0 +1,15 @@
+{
+  "name": "ctf-eval",
+  "version": "1.0.0",
+  "description": "A simple website which contains a vulnerability in an api",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookies": "0.7.3",
+    "express": "^4.15.2",
+    "level": "5.0.1"
+  }
+}
