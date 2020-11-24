@@ -1,0 +1,43 @@
+<html><head>
+<link rel="stylesheet" href="/static/cc.css">
+<link rel="stylesheet" href="/static/common.css">
+<title>Create a cool nickname</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+ function send(){
+     let emoji = $('#emoji')[0].value;
+     if(emoji.length > 0){
+         $.post("/", {'emoji': emoji}, function(data){
+             $('#msg')[0].innerHTML = '<b>' + data + '</b>';
+             $('#error')[0].className = "shorten_error_display";
+         });
+     }
+ }
+</script>
+</head>
+<body><center><div id="content" class="" style="width: 700px;"><div class="shorten_page page_block" style="padding: 40px 20px 0;">
+    <div class="shorten_header">Emoji Information Service</div>
+    <div class="shorten_about">Santa likes emojis! Enter one to find out what it means. Try 'Santa' for instance.</div>
+
+    <div class="shorten_row shorten_form_row" id="shorten_row">
+        <div class="shorten_input shorten_input_wrapper" id="shorten_input_wrapper">
+            <input type="text" class="dark shortener_input" id="emoji" placeholder="Enter a Emoji">
+        </div>
+
+        <div class="shorten_input">
+            <button class="shorten_button flat_button" onclick="send()" id="shorten_btn">
+                Go
+            </button>
+        </div>
+    </div>
+
+    
+    <div class="shorten_error" id="error" style="padding-bottom: 10px; height: 50px;">
+        <div class="msg"><div id="msg" class="msg_text"></div></div>
+    </div>
+    <!--
+         Here is a cheatsheet of the emojis you can use: https://www.webfx.com/tools/emoji-cheat-sheet/
+    --> 
+</div>
+
+</div></center></body></html>
