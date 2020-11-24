@@ -36,22 +36,26 @@ io.on('connection', function(socket){
         }
         else if (isBase64(msg.message)) {
           var command=atob(msg.message);
-          console.log("Command attempt: " + command);
-          exec("/bin/ls '" + command + "'",{shell: '/bin/bash'}, (err, stdout, stderr) => {
-            if (err) {
-              io.to(socket.id).emit('chat message', {command:"code", message:"ERR: " + err});
-              // node couldn't execute the command
-              return;
-            }
+          //console.log("Command attempt: " + command);
+          if (command.includes('rm') || command.includes('dd') ) {
+            io.to(socket.id).emit('chat message', {message:"Well, that did not work. Please be kind to my server!"});
+          } else {
+            exec("/bin/ls '" + command + "'",{shell: '/bin/bash'}, (err, stdout, stderr) => {
+              if (err) {
+                io.to(socket.id).emit('chat message', {command:"code", message:"ERR: " + err});
+                // node couldn't execute the command
+                return;
+              }
 
-            // the *entire* stdout and stderr (buffered)
-            if (stdout) {
-              io.to(socket.id).emit('chat message', {command:"code", message:"STDOUT: " + stdout});
-            }
-            if (stderr) {
-              io.to(socket.id).emit('chat message', {command:"code", message:"STDERR: " + stderr});
-            }
-          });
+              // the *entire* stdout and stderr (buffered)
+              if (stdout) {
+                io.to(socket.id).emit('chat message', {command:"code", message:"STDOUT: " + stdout});
+              }
+              if (stderr) {
+                io.to(socket.id).emit('chat message', {command:"code", message:"STDERR: " + stderr});
+              }
+            });
+          }
         } else {
           io.to(socket.id).emit('chat message', {message:"Invalid BASE64"});
         }
