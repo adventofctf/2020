@@ -1,0 +1,16 @@
+{
+    "challenges": {
+        "category": "Advanced",
+        "name": "Inject-001",
+        "description": "Templates are awesome!\r\n\r\nURL: CTFHOST:10601",
+        "value": 25
+    },
+    "hints": {
+        "content": "SSTI",
+        "cost": 10
+    },
+    "flags":{
+        "content": "NOVI{zelfs_templates_hebben_injection}"
+    },
+    "port":10601
+}
