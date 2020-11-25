@@ -6,7 +6,7 @@ name: "18"
 author: "Arjen Wiersma"
 category: Advent
 description: |
-  We created a calculator for Santa to figure out how many days until Christmas remain. It is not finished yet, it will only return what you give it. Sort of.
+  We created a calculator for Santa to figure out how many days until Christmas remain. It is not finished yet, it will only return what you give it. Sort of. The flag is in flag.txt.
 
   Visit https://18.adventofctf.com to start the challenge.
 value: 1800
