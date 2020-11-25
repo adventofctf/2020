@@ -18,6 +18,7 @@ RUN npm install
 COPY src/ .
 
 RUN chown -R node:node /opt/app
+RUN chmod -R a-w /opt/app
 RUN chmod -R 400 /opt/app/flag.txt
 RUN chmod -R 400 /opt/app/server.js
 
