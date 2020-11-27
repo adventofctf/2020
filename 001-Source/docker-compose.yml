@@ -1,6 +1,6 @@
 version: "3"
 services:
-  ctf001:
+  ctf:
     build: .
     ports:
         - '10001:80'
