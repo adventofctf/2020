@@ -1,6 +1,6 @@
 <?php
 if (!$_COOKIE["zeroten"]) {
-    setcookie("zeroten", base64_encode(json_encode(["page"=>"main","role" => "12dea96fec20593566ab75692c9949596833adc9"])), time() + (86400 * 30), "/");
+    setcookie("zeroten", base64_encode(json_encode(["page"=>"main","role" => "12dea96fec20593566ab75692c9949596833adc9"])), time() + (86400 * 30), "/", "10.adventofctf.com", true);
 }
 ?>
 <!doctype html>
@@ -12,8 +12,6 @@ if (!$_COOKIE["zeroten"]) {
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
         <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <style>
@@ -41,7 +39,7 @@ if (!$_COOKIE["zeroten"]) {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-6 mx-auto"
+                    <div class="col-xl-6 mx-auto">
                         <div class="card text-center">
                             <div class="card-header">
                                Pages in Santa's big book
@@ -79,7 +77,7 @@ if (!$_COOKIE["zeroten"]) {
                                     <div class="col-md-9 offset-md-1 align-middle">
                                         <p class="text-center">
                                             <span class="align-middle">
-                                                The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>.
+                                                The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>. (Dutch follows) Als je al weet dat je een opleiding wilt volgen, neem dan <a href="https://app.hubspot.com/meetings/novi/hbo-cs">contact op met Valerie
                                             </span>
                                         </p>
                                     </div>

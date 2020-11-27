@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-6 mx-auto"
+                    <div class="col-xl-6 mx-auto">
                         <div class="card text-center">
                             <div class="card-header">
                                 Is this the end of your nightmare?

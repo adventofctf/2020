@@ -11,7 +11,7 @@ if ($_COOKIE["zerooneone"]) {
     $data = json_decode(base64_decode($_COOKIE["zerooneone"]), true);
 }
 
-if ($role === "d033e22ae348aeb5660fc2140aec35850c4da997") {
+if (false) {
 ?>
     <p>
         The dark secret on this page is: NOVI{LFI_and_st1ll_you_f0und_it}

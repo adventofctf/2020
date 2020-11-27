@@ -49,7 +49,7 @@ tags:
 # Accepts dictionaries or strings
 hints:
     - {
-        content: "In the end this is an command injection, but what do you get to see? Maybe you should expand your shell knowledge? ",
+        content: "In the end this is an command injection, but what do you get to see? Maybe you should expand your shell knowledge? What type of messages do you see?",
         cost: 600
     }
 
