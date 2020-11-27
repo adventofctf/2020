@@ -1,0 +1,145 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Advent of CTF 20</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="/static/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+         function send(){
+             let emoji = $('#emoji')[0].value;
+             if(emoji.length > 0){
+                 $.post("/", {'emoji': emoji}, function(data){
+                     $('#msg')[0].innerHTML = '<b>' + data + '</b>';
+                 });
+             }
+         }
+        </script>
+
+        <style>
+         .row-margin-05 { margin-top: 0.5em; }
+         .row-margin-10 { margin-top: 1.0em; }
+         .row-margin-20 { margin-top: 2.0em; }
+         .row-margin-30 { margin-top: 3.0em; }
+         .tic-panel{
+             border: solid 2px black;
+             margin: .4vw 0;
+             background: #66A5AD;
+             padding: .4vw;
+         }
+
+         .tic-box{
+             border: solid black 1px;
+             font-size: 5vw;
+             background: #656D7D;
+             text-align: center;
+             color: lavender;
+         }
+         .tic-x {
+             background: #DA4F4F;
+         }
+         .tic-e {
+             background: #6AB187;
+         }
+         .tic-box:hover{
+             background: #20948B;
+         }
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron bg-transparent mb-0 radius-0">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 mx-auto">
+                        <h1 class="display-2">Advent of CTF <span class="vim-caret">20</span></h1>
+                        <div class="lead mb-3 text-mono text-warning">Your daily dose of CTF for December</div>
+                        <div class="text-darkgrey text-mono my-2">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xl-12 mx-auto">
+                                <div class="card text-center">
+                                    <div class="card-header">
+                                        Elves (O) vs Santa (X)
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6 content mx-auto">
+                                                <div class="container-fluid tic-container">
+
+                                                    {% if finished %}
+
+                                                    Game goes to: {{ winner }}
+
+                                                    {% if winner == "X" %}
+                                                    NOVI{blockchain_cyb3r_security}
+
+                                                    Thank you for playing Advent of CTF! I hope you have a great christmas!
+                                                    {% endif %}
+                                                    
+                                                    {% endif %}
+                                                    
+                                                    {% for i in range(3) %}
+                                                    <div class="row tic-row">
+                                                        {% for j in range(3) %}
+                                                        <div class="col-4 tic-box
+                                                                    {% if board[i][j] == "X" %}
+                                                                    tic-x
+                                                                    {% elif board[i][j] == "O" %}
+                                                                    tic-o
+                                                                    {% else %}
+                                                                    tic-e
+                                                                    {% endif %}
+                                                             "> 
+                                                            {% if board[i][j] %}
+                                                            {{ board[i][j] }}
+                                                            {% elif finished != True %}
+                                                            <a href="{{ url_for('play', row=i, col=j) }}">{{turn}}</a>
+                                                            {% endif %}
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        Sanity check passed? {{ sane }} blockchain? {{ blockchain }} | <a href="{{url_for('reset')}}" class="btn btn-default">Reset Game</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-margin-30">
+                                <div class="card mb-3 text-center bg-dark text-white">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <img src="/static/logo.png">
+                                            </div>
+                                            <div class="col-md-9 offset-md-1 align-middle">
+                                                <p class="text-center">
+                                                    <span class="align-middle">
+                                                        The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>.
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+
