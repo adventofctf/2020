@@ -3,4 +3,4 @@ services:
   ctf:
     build: .
     ports:
-        - '10021:8000'
+        - '10024:8000'
