@@ -48,7 +48,7 @@ tags:
 # Accepts dictionaries or strings
 hints:
     - {
-        content: "What happens in the browser, stays in the browser",
+        content: "What happens in the browser, stays in the browser. Try to recreate the steps the browser takes to write the checksum, read the source carefully.",
         cost: 200
     }
 

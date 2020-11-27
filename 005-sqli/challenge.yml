@@ -48,7 +48,7 @@ tags:
 # Accepts dictionaries or strings
 hints:
     - {
-        content: "How many users would a database have?",
+        content: "How many users would a database have? Maybe you are retrieving too many?",
         cost: 250
     }
 
