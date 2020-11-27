@@ -1,0 +1,14 @@
+# Challenge specific files
+README.md
+WRITEUP.md
+writeup.org
+challenge.yml
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Build files
+Makefile
+.gitignore
