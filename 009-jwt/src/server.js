@@ -22,7 +22,12 @@ http.createServer(function (req, res) {
     var fileStream = fs.createReadStream(cssPath, "UTF-8");
     res.writeHead(200, {"Content-Type": "text/css"});
     fileStream.pipe(res) }
-  else                          { app.notFound(res);                } // 404 error
+   else if(req.url.match("\.png$")){
+    var cssPath = mpath.join(__dirname, 'public', req.url);
+    var fileStream = fs.createReadStream(cssPath);
+    res.writeHead(200, {"Content-Type": "image/png"});
+    fileStream.pipe(res) }
+ else                          { app.notFound(res);                } // 404 error
 }).listen(port);
 
 console.log("The server is running at " + port);
