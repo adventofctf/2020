@@ -1,0 +1,6 @@
+version: "3"
+services:
+  ctf001:
+    build: .
+    ports:
+        - '10022:80'

