@@ -89,7 +89,6 @@ def verify_chain(game):
 
     if len(chain) > 0:
         if board != chain[-1]["board"]:
-            print("Board in chain and game state do not match")
             return False
         
     for i in range(len(chain)):
@@ -97,7 +96,6 @@ def verify_chain(game):
         h = hash_board(block["board"])
         h = hash_string(h + block["prev"])
         if h != block["hash"]:
-            print("Hash %s did not match %s" % (h,block["hash"]))
             return False
     return True
 
@@ -119,7 +117,7 @@ def compute_block(game):
     return {"board": board, "prev": prev["hash"], "hash": h}
 
 def set_cookie(resp, game):
-    resp.set_cookie('game', base64.b64encode(pickle.dumps(game)).decode('utf-8'))
+    resp.set_cookie('game', base64.b64encode(pickle.dumps(game)).decode('utf-8'), secure=True, domain="24.adventofctf.com")
     
 def get_game(request):
     cookie=request.cookies.get('game')
@@ -204,4 +202,4 @@ def winner(board):
     return [False, "draw"]
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=18000)
+    app.run(host='0.0.0.0', port=8000)

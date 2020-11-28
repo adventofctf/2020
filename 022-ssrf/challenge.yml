@@ -6,7 +6,7 @@ name: "22"
 author: "Arjen Wiersma"
 category: Advent
 description: |
-  We have a new service! You can santa's favorite pictues. Currently there is only one, but it is a very good one! You can get the flag through flag.php.
+  We have a new service! You can view santa's favorite pictues. Currently there is only one, but it is a very good one! You can get the flag through flag.php.
   
   Visit https://22.adventofctf.com to start the challenge.
 
@@ -58,7 +58,7 @@ hints:
 # Can be removed if unused
 # Accepts challenge names as strings or challenge IDs as integers
 requirements:
-    - "22"
+    - "21"
 
 # The state of the challenge.
 # This is visible by default. It takes two values: hidden, visible.

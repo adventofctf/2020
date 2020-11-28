@@ -19,7 +19,7 @@
     <body>
 
         <div class="jumbotron bg-transparent mb-0 radius-0">
-            <div class="container">
+            <div class="container fluid">
                 <div class="row">
                     <div class="col-xl-6 mx-auto">
                         <h1 class="display-2">Advent of CTF <span class="vim-caret">22</span></h1>
@@ -54,20 +54,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row row-margin-30">
-                                <div class="card mb-3 bg-dark text-white">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <img src="/logo.png">
-                                            </div>
-                                            <div class="col-md-9 offset-md-1 align-middle">
-                                                <p class="text-center">
-                                                    <span class="align-middle">
-                                                        The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>.
-                                                    </span>
-                                                </p>
-                                            </div>
+                        </div>
+                        <div class="row row-margin-30">
+                            <div class="card mb-3 bg-dark text-white">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <img src="/logo.png">
+                                        </div>
+                                        <div class="col-md-9 offset-md-1 align-middle">
+                                            <p class="text-center">
+                                                <span class="align-middle">
+                                                    The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>.
+                                                </span>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>

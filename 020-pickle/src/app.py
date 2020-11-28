@@ -55,7 +55,7 @@ def reset():
                          
 
 def set_cookie(resp, game):
-    resp.set_cookie('game', base64.b64encode(pickle.dumps(game)).decode('utf-8'))
+    resp.set_cookie('game', base64.b64encode(pickle.dumps(game)).decode('utf-8'), secure=True, domain="20.adventofctf.com")
     
 def get_game(request):
     cookie=request.cookies.get('game')
