@@ -29,7 +29,7 @@
                 <div class="col-10 mx-auto">
                     <div class="card text-center">
                         <div class="card-header">
-                            Follow us on Twitter
+                            Follow us on Twitter <a href="https://twitter.com/adventofctf/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @adventofctf</a> | <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>
                         </div>
                         <div class="card-body">
                             <div class="text-mono text-left">
@@ -43,19 +43,25 @@
                                         The score board tells the truth. Order is determined by time of flag submission.
                                     </li>
                                     <li>
-                                        No automated tools such as SQLMap, Nikto, TplMap, etc.
+                                        No automated tools such as SQLMap, Nikto, TplMap, etc. Triggering the detection will result in a temp ban of 10 minutes.
                                     </li>
                                     <li>
                                         Just because you might be able to break the server, doesn't mean you should. Be nice to the little machines!
                                     </li>
+                                </ul>
+                                <h2>Important things</h2>
+                                <ul>
                                     <li>
                                         Posting writeups about challenges is encouraged! Send me a link on twitter at @adventofctf when you post one!
                                     </li>
                                     <li>
-                                        Collect all 24 badges and have lots of fun!
+                                        Please update your profile to indicate where you are from, can we get all 195 countries?
                                     </li>
                                     <li>
-                                        Please update your profile to indicate where you are from, can we get all 195 countries?
+                                        Collect all 24 badges and have lots of fun! (<a href="https://badges.adventofctf.com">Badge Server</a>)
+                                    </li>
+                                    <li>
+                                        You will need a browser, Firefox is a good choice. Also <a href="https://gchq.github.io/CyberChef">CyberChef</a> will come in handy. For some more difficult stages you will need to use Python.
                                     </li>
                                 </ul>
                             </div>
