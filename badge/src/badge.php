@@ -52,10 +52,18 @@ if ($key) {
         <meta property="og:image" content="https://badges.adventofctf.com/badges/<?= $key ?>.png" />
         <meta property="og:image:width" content="700" />
         <meta property="og:image:height" content="360" />
-        <meta property="og:url" content="https://badges.adventofctf.com/badges.php?key=<?= $key ?>" />
+        <meta property="og:url" content="https://badges.adventofctf.com/badges.php?key=<?= $key ?>&share=1" />
         <meta property="og:type" content="game.achievement" />
         <meta property="game:points" content="<?= $points ?>" />
         <meta property="article:author" content="Advent of CTF" />
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@adventofctf">
+        <meta name="twitter:creator" content="@credmp">
+        <meta name="twitter:title" content="Challenge <?= $solve ?> solved!">
+        <meta name="twitter:description" content="I have solved day <?= $solve ?> of Advent of CTF. It was worth <?= $points ?> points. Come join the fun at https://www.adventofctf.com">
+        <meta name="twitter:image" content="https://badges.adventofctf.com/badges/<?= $key ?>.png">
+
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Advent of CTF Badge</title>

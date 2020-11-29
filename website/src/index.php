@@ -6,8 +6,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@adventofctf">
+<meta name="twitter:creator" content="@credmp">
+<meta name="twitter:title" content="Advent of CTF">
+<meta name="twitter:description" content="Every day of December a new CTF Challenge. Every morning at 8am CET a new challenge unlocks.">
+<meta name="twitter:image" content="https://www.adventofctf.com/logo_alt.png">
+
         <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 
@@ -51,6 +56,9 @@
                                 </ul>
                                 <h2>Important things</h2>
                                 <ul>
+                                    <li>
+                                        There may, or may not, be prizes to win. More about this later! 😻 
+                                    </li>
                                     <li>
                                         Posting writeups about challenges is encouraged! Send me a link on twitter at @adventofctf when you post one!
                                     </li>
