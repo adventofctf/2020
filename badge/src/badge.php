@@ -45,6 +45,12 @@ if ($key) {
     $entry = $data[$key];
     $solve = $entry["solve"];
     $points = $entry["points"];
+
+    if (!$entry) {
+        header("Location: index.php?error=Invalid key");
+    }
+} else {
+    header("Location: index.php?error=Invalid key");
 }
 ?>
 
