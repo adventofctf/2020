@@ -1,7 +1,3 @@
-<?php
-setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"false"])), time() + (86400 * 30), "/", "03.adventofctf.com", true);
-?>
-
 <html class="no-js" lang="en">
     <head>
         <meta charset="utf-8">
@@ -38,7 +34,7 @@ if ($_GET["password"] == base64_encode($_GET["username"] . '-NOVI')) {
 ?>
 
     <div class="row">
-        <div class="col-6 mx-auto"
+        <div class="col-6 mx-auto">
             <div class="card text-center">
                 <div class="card-header">
                     FLAG

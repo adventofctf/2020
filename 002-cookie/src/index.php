@@ -42,7 +42,7 @@ if ($_COOKIE["authenticated"]) {
 ?>
 
     <div class="row">
-        <div class="col-6 mx-auto"
+        <div class="col-6 mx-auto">
             <div class="card text-center">
                 <div class="card-header">
                     FLAG

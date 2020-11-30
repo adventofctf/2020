@@ -3,8 +3,11 @@ $flag = $_POST["flag"];
 $key = $_GET["key"];
 
 if ($flag) {
-    $key = md5($flag);
+    $key = md5(trim($flag));
     header("Location: badge.php?key=$key");
+}
+if (!$key) {
+    header("Location: index.php?error=No Key");
 }
 
 $solve = 0;
@@ -52,7 +55,7 @@ if ($key) {
         <meta property="og:image" content="https://badges.adventofctf.com/badges/<?= $key ?>.png" />
         <meta property="og:image:width" content="700" />
         <meta property="og:image:height" content="360" />
-        <meta property="og:url" content="https://badges.adventofctf.com/badges.php?key=<?= $key ?>&share=1" />
+        <meta property="og:url" content="https://badges.adventofctf.com/badge.php?key=<?= $key ?>&share=1" />
         <meta property="og:type" content="game.achievement" />
         <meta property="game:points" content="<?= $points ?>" />
         <meta property="article:author" content="Advent of CTF" />
@@ -70,8 +73,6 @@ if ($key) {
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
         <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
         <style>
@@ -127,7 +128,7 @@ if ($key) {
         </div>
 
         <div class="row">
-            <div class="col-6 mx-auto"
+            <div class="col-6 mx-auto">
 
                 <div class="card">
                     <img class="card-img-top" src="/badges/<?= $key ?>.png" alt="Card image cap">
@@ -137,7 +138,7 @@ if ($key) {
                         if (!$_GET["share"]) {
                         ?>
                             <p class="card-text">Congratulations, you earned it. Be sure to share this badge on social media! There is nothing like boasting about finishing a challenge before your friends did!</p>
-                            <a href="https://twitter.com/intent/tweet?text=I just solved challenge <?= $solve ?> on Advent of CTF @adventofctf&url=https%3A%2F%2Fbadges%2Eadventofctf%2Ecom%2Fbadges%2Ephp%3Fkey%3D<?= $key ?>%26share=1&hashtags=ctf,advent,hack" class="btn btn-info" target=_blank><span class="fab fa-twitter mr-2"></span> Share on twitter</a>
+                            <a href="https://twitter.com/intent/tweet?text=I just solved challenge <?= $solve ?> on Advent of CTF @adventofctf&url=https%3A%2F%2Fbadges%2Eadventofctf%2Ecom%2Fbadge%2Ephp%3Fkey%3D<?= $key ?>%26share=1&hashtags=ctf,advent,hack" class="btn btn-info" target=_blank><span class="fab fa-twitter mr-2"></span> Share on twitter</a>
                             <a class="btn btn-primary" onclick="myCopy()" onmouseout="outFunc()"><span class="far fa-copy mr-2"></span> <span class="tooltiptext" id="myTooltip">Copy share URL</span></a>
 
                         <?php
