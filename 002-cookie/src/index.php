@@ -1,5 +1,10 @@
 <?php
-setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"false"])), time() + (86400 * 30), "/", "02.adventofctf.com", true);
+if ($_POST["username"] && !$_COOKIE["authenticated"]){
+    $cookie = base64_encode(json_encode(["guest"=>"true","admin"=>"false"]));
+    setcookie("authenticated", $cookie , time() + (86400 * 30), "/", "02.adventofctf.com", true);
+} else if ($_COOKIE["authenticated"]) {
+   $cookie = $_COOKIE["authenticated"]; 
+}
 ?>
 
 <html class="no-js" lang="">
@@ -31,58 +36,59 @@ setcookie("authenticated", base64_encode(json_encode(["guest"=>"true","admin"=>"
 
                     </div>
                 </div>
-            </div>
 <?php
-$loggedin = false;
 
-if ($_COOKIE["authenticated"]) {
-    $data = json_decode(base64_decode($_COOKIE["authenticated"]), true);
-    if ($data["guest"] === "false" && $data["admin"] === "true") {
-        $loggedin=true;
+if ($cookie) {
+    $data = json_decode(base64_decode($cookie), true);
 ?>
 
     <div class="row">
-        <div class="col-6 mx-auto">
+        <div class="col-xl-6 mx-auto">
             <div class="card text-center">
                 <div class="card-header">
-                    FLAG
+                    Show me the flag....
                 </div>
+
                 <div class="card-body">
+                    <?php
+
+                    if ($data["guest"] === "false" && $data["admin"] === "true") {
+                    ?>
                     <p>
-                        Storing sensitive data, or data that controls the way authentication works, in cookies is generally a bad idea.
-                    </p>
-                    <p>
-                        Be sure to grab your points on the score board and you badge for social media!
-                    </p>
-                </div>
-                <div class="card-footer">
-                    <div class="alert alert-warning" role="alert">
                         <span class="badge badge-warning">FLAG</span>
                         NOVI{cookies_are_bad_for_auth}
-                    </div>
+                    </p>
+                    <?php
+                    } else {
+                    ?>
+                        I'm sorry Guest, I can not do that.
+                    <?php
+                    }
+                    ?>
+                </div>
+                <div class="card-footer">
+                    "Whoop Whoop" - @GevuldeCookie
                 </div>
             </div>
         </div>
     </div>
 <?php
-}
-}
-if ($loggedin === false) {
+} else {
 ?>
         <div class="row">
-            <div class="col-4 mx-auto">
+            <div class="col-xl-6 mx-auto">
                 <div class="card text-center">
                     <div class="card-header">
                         Login
                     </div>
                     <div class="card-body">
 
-                        <form action="/index.php">
+                        <form action="/index.php" method="POST">
                             <div class="form-group">
                                 <label for="username">Username</label>
-                                <input type="text" class="form-control" id="username"  placeholder="Enter username">
+                                <input type="text" class="form-control" id="username" name="username"  placeholder="Enter username">
                                 <label for="pasword">Password</label>
-                                <input type="password" class="form-control" id="password"  placeholder="Enter password">
+                                <input type="password" class="form-control" id="password" name="password"  placeholder="Enter password">
                             </div>
                             <button type="submit" class="btn btn-warning">Submit</button>
                         </form>
@@ -95,6 +101,7 @@ if ($loggedin === false) {
         </div>
 
         <div class="row row-margin-30">
+            <div class="col-xl-6 mx-auto">
             <div class="card mb-3 text-center bg-dark text-white">
                 <div class="card-body">
                     <div class="row">
@@ -112,11 +119,12 @@ if ($loggedin === false) {
                 </div>
             </div>
         </div>
-
+        </div>
 
 <?php
 }
 ?>
+            </div>
         </div>
     </body>
 </html>
