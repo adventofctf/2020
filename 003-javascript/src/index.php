@@ -50,7 +50,7 @@ if ($_GET["password"] == base64_encode($_GET["username"] . '-NOVI')) {
                 <div class="card-footer">
                     <div class="alert alert-warning" role="alert">
                         <span class="badge badge-warning">FLAG</span>
-                        NOVI{javascript_is_not_safe}
+                        NOVI{javascript_is_not_s@fe}
                     </div>
                 </div>
             </div>

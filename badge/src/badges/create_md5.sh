@@ -8,6 +8,6 @@ do
     flag=$(grep NOVI $i/challenge.yml | cut -d"-" -f 2 | sed -e 's/^[ \t]*//');
     md5=$(echo -n $flag | md5sum | cut -d" " -f 1)
 
-    cp Level$c* $md5.png
+    echo cp Level$c* $md5.png
 done
 

@@ -18,7 +18,7 @@ if ($key) {
         "f90b2bf3f08ee628c09505ff309018ed" => ["solve" => 0, "points"=>1],
         "3f12301d8715a1371d2d776d25ea6ab6" => ["solve" => 1, "points"=>100],
         "948b1eb046c96865a05808660ee99e10" => ["solve" => 2, "points"=>200],
-        "4a2932632b3eb256e44cf9b0728911b4" => ["solve" => 3, "points"=>300],
+        "4f5cc0afbb9e7ec6a57cdd68a92b9213" => ["solve" => 3, "points"=>300],
         "f1d6ca5572e0c012239bcf4a8f797be1" => ["solve" => 4, "points"=>400],
         "080b5d5fcaf13167d2e7e8871fdc8ded" => ["solve" => 5, "points"=>500],
         "c366d63edd4a35c9f8bea89e57401fef" => ["solve" => 6, "points"=>600],

@@ -28,7 +28,7 @@ image: .
 # Can be removed if unused
 # Accepts strings or dictionaries
 flags:
-  - NOVI{javascript_is_not_safe}
+  - NOVI{javascript_is_not_s@fe}
 
 # Tags are used to classify your challenge with topics. You should provide at
 # least one.
