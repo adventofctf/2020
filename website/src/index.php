@@ -53,6 +53,9 @@
                                     <li>
                                         Just because you might be able to break the server, doesn't mean you should. Be nice to the little machines!
                                     </li>
+                                    <li>
+                                        Official writeups will be published by Arjen (<a href="https://arjenwiersma.nl">current list of writeups</a>). Unofficial writeups will be available on twitter(@adventofctf).
+                                    </li>
                                 </ul>
                                 <h2>Important things</h2>
                                 <ul>
