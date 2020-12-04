@@ -96,36 +96,11 @@
                                 </ul>
                                 <h2>Write ups</h2>
                                 <ul>
-                                    <li>For official writeups check out <a href="https://arjenwiersma.nl/">Arjen 'credmp' Wiersma's homepage</a> (challenge creator)</li>
+                                    <li>For official writeups check out <a href="https://arjenwiersma.nl/">Arjen 'credmp' Wiersma</a> (challenge creator)</li>
                                     <li>Community writeups are tracked on twitter and the <a href="https://arjenwiersma.nl/writeups/advent-of-ctf/community.html">Community Page</a></li>
                                 </ul>
                             </div>
 
-                            <h2>Prizes</h2>
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="row">
-                                        <div class="col-xl-4"><img src="/logo.png"/></div>
-                                        <div class="col-xl-8">
-                                            To Be Announced
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="row">
-                                        <div class="col-xl-4"><img src="/htb.png"/></div>
-                                        <div class="col-xl-8 text-left">
-                                            <p>Access to Hack The Box Academy</p>
-                                            <ul>
-                                                <li>1st place: 1000 Cubes</li>
-                                                <li>2nd place: 500 Cubes</li>
-                                                <li>3rd place: 200 Cubes</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
                             <div class="text-mono">
                                 <a href="https://ctfd.adventofctf.com" class="btn btn-primary btn-shadow px-3 my-2 ml-0 text-left js-ht-download-link" data-type="theme" data-id="95">Start Hacking</a>
                             </div>
