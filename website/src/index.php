@@ -55,10 +55,25 @@
                                         No automated tools such as SQLMap, Nikto, TplMap, etc. Triggering the detection will result in a temp ban of 10 minutes.
                                     </li>
                                     <li>
-                                        Just because you might be able to break the server, doesn't mean you should. Be nice to the little machines!
+                                        Just because you might be able to break the server, does not mean you should. Be nice to the little machines!
                                     </li>
                                     <li>
                                         Official writeups will be published by Arjen (<a href="https://arjenwiersma.nl">current list of writeups</a>). Unofficial writeups will be available on twitter(@adventofctf).
+                                    </li>
+                                </ul>
+                                <h2>Scoring</h2>
+                                <ul>
+                                    <li>
+                                        Each player is awarded the points for the challenge, if a hint is used, those points are deducted.
+                                    </li>
+                                    <li>
+                                        First player to solve the challenge, first blood, will be awarded an extra 250 points.
+                                    </li>
+                                    <li>
+                                        The next 4 solves (completing the Top 5) will be awarded an extra 150 points.
+                                    </li>
+                                    <li>
+                                        The next 5 solves (completing the Top 10) will be awarded an extra 100 points.
                                     </li>
                                 </ul>
                                 <h2>Important things</h2>
@@ -79,6 +94,37 @@
                                         You will need a browser, Firefox is a good choice. Also <a href="https://gchq.github.io/CyberChef">CyberChef</a> will come in handy. For some more difficult stages you will need to use Python.
                                     </li>
                                 </ul>
+                                <h2>Write ups</h2>
+                                <ul>
+                                    <li>For official writeups check out <a href="https://arjenwiersma.nl/">Arjen 'credmp' Wiersma's homepage</a> (challenge creator)</li>
+                                    <li>Community writeups are tracked on twitter and the <a href="https://arjenwiersma.nl/writeups/advent-of-ctf/community.html">Community Page</a></li>
+                                </ul>
+                            </div>
+
+                            <h2>Prizes</h2>
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="row">
+                                        <div class="col-xl-4"><img src="/logo.png"/></div>
+                                        <div class="col-xl-8">
+                                            To Be Announced
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="row">
+                                        <div class="col-xl-4"><img src="/htb.png"/></div>
+                                        <div class="col-xl-8 text-left">
+                                            <p>Access to Hack The Box Academy</p>
+                                            <ul>
+                                                <li>1st place: 1000 Cubes</li>
+                                                <li>2nd place: 500 Cubes</li>
+                                                <li>3rd place: 200 Cubes</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
                             <div class="text-mono">
                                 <a href="https://ctfd.adventofctf.com" class="btn btn-primary btn-shadow px-3 my-2 ml-0 text-left js-ht-download-link" data-type="theme" data-id="95">Start Hacking</a>
