@@ -30,7 +30,7 @@
 
             <div class="row">
                 <div class="col-12 text-center text-danger">
-                    <h1><span id="countdown"></span></h1>
+                    <h1>The next challenge unlocks tomorrow at 8am CET</h1>
                 </div>
             </div>
 
@@ -129,41 +129,6 @@
                 </div>
             </div>
         </div>
-        <script>
-         function pad(n, width, z) {
-             z = z || '0';
-             n = n + '';
-             return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-         }
-         var last = new Date("Dec 6 2020 8:00:00");
-         var tomorrow = new Date();
-         tomorrow.setDate(new Date().getDate()+1);
-         tomorrow.setHours(8);
-         tomorrow.setMinutes(0);
-         tomorrow.setSeconds(0);
-         var countDownDate = tomorrow.getTime();
-         if (tomorrow < last) {
-             // Update the count down every 1 second
-             var x = setInterval(function() {
-
-                 // Get today's date and time
-                 var now = new Date().getTime();
-                 
-                 // Find the distance between now and the count down date
-                 var distance = countDownDate - now;
-                 
-                 var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                 
-                 document.getElementById("countdown").innerHTML = pad(hours,2) + ":"
-                                                                + pad(minutes,2) + ":" + pad(seconds,2) + " until the next challenge unlocks";
-                 
-             }, 1000);
-         } else {
-             document.getElementById("countdown").innerHTML = "The CTF has finished"
-         }
-        </script>
     </body>
 </html>
 
