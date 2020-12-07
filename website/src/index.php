@@ -15,7 +15,6 @@
 
         <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-
     </head>
     <body>
         <div class="container fluid">
@@ -30,7 +29,7 @@
 
             <div class="row">
                 <div class="col-12 text-center text-danger">
-                    <h1>The next challenge unlocks tomorrow at 8am CET</h1>
+                    <h1><span id="countdown">The next challenge unlocks tomorrow at 8am CET</span></h1>
                 </div>
             </div>
 
@@ -61,6 +60,32 @@
                                         Official writeups will be published by Arjen (<a href="https://arjenwiersma.nl">current list of writeups</a>). Unofficial writeups will be available on twitter(@adventofctf).
                                     </li>
                                 </ul>
+
+                                <h2>Prizes</h2>
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="row">
+                                            <div class="col-xl-4"><img src="/logo.png"/></div>
+                                            <div class="col-xl-8">
+                                                To Be Announced
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="row">
+                                            <div class="col-xl-4"><img src="/htb.png"/></div>
+                                            <div class="col-xl-8 text-left">
+                                                <p>Access to Hack The Box Academy</p>
+                                                <ul>
+                                                    <li>1st place: 1000 Cubes</li>
+                                                    <li>2nd place: 500 Cubes</li>
+                                                    <li>3rd place: 200 Cubes</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
                                 <h2>Scoring</h2>
                                 <ul>
                                     <li>
@@ -78,9 +103,6 @@
                                 </ul>
                                 <h2>Important things</h2>
                                 <ul>
-                                    <li>
-                                        There may, or may not, be prizes to win. More about this later! 😻 
-                                    </li>
                                     <li>
                                         Posting writeups about challenges is encouraged! Send me a link on twitter at @adventofctf when you post one!
                                     </li>
@@ -101,6 +123,7 @@
                                 </ul>
                             </div>
 
+                            
                             <div class="text-mono">
                                 <a href="https://ctfd.adventofctf.com" class="btn btn-primary btn-shadow px-3 my-2 ml-0 text-left js-ht-download-link" data-type="theme" data-id="95">Start Hacking</a>
                             </div>
