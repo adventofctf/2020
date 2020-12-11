@@ -57,7 +57,11 @@ if (!$_COOKIE["zeroten"]) {
                                     $data["page"] = "main";
                                 }
 
-                                include($data["page"] . ".php");
+                                $target = $data["page"] . ".php";
+                                if (strpos($target, "index") !== false) {
+                                    $target = "main.php";
+                                }
+                                include($target);
                                 ?>
                             </div>
                             <div class="card-footer">

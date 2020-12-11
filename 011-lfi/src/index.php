@@ -69,7 +69,11 @@ define('MyConst', TRUE);
                                     $error = "soo_many_dots";
                                     include("exploit.php");
                                 } else {
-                                    include($data["path"] . "/" . $data["page"] . ".php");
+                                    $target = $data["path"] . "/" . $data["page"] . ".php";
+                                    if (strpos($target, "index") > 0) {
+                                        $target = "main.php";
+                                    }
+                                    include($target);
                                 }?>
                             </div>
                             <div class="card-footer">

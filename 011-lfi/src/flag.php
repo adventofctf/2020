@@ -20,7 +20,7 @@ if (false) {
 } else {
 ?>
     <p>
-        You are on the right page, but you cannot see what you want yet. Go get promoted!
+        You are on the right page, but you cannot see what you want.
     </p>
 <?php
 }
