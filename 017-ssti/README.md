@@ -19,7 +19,7 @@ Step 3, run it yourself!
 ``` python
 def magic(flag, key): 
     return ''.join(chr(x ^ ord(flag[x]) ^ ord(key[x]) ^ ord(key[::-1][x])) for x in range(len(flag)))
- 
+
 flag="C\x1eS\x1dwsef}j\x057i\x7fo{D)'dO,+sutm3F"
 magic(flag, '46e505c983433b7c8eefb953d3ffcd196a08bbf9')
 ```

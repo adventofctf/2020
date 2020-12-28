@@ -10,4 +10,4 @@ USE testdb;
 CREATE table naughty (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, username varchar(50), badthing varchar(50) default null);
 INSERT INTO naughty (username, badthing)
   VALUES
-  ('egische', 'NOVI{bl1nd_sql1_is_naughty}' );
+  ('george', 'NOVI{bl1nd_sql1_is_naughty}' );

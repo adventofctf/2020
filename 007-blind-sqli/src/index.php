@@ -21,7 +21,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xl-6 mx-auto">
-                        <h1 class="display-2">Advent of CTF <span class="vim-caret">7</span></h1>
+                        <h1 class="display-2">Advent of CTF <span class="vim-caret">7 Fixed</span></h1>
                         <div class="lead mb-3 text-mono text-warning">Your daily dose of CTF for December</div>
                     </div>
                 </div>
@@ -46,6 +46,12 @@
                         </div>
                         <div class="card-body">
 
+                                <table class="table table-hover table-striped">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th style="width:50%">Why?</th>
+                                        </tr>
+                                    </thead>
                             <?php
                             if ($_POST["search"]) {
                                 $search = $_POST["search"];
@@ -56,14 +62,9 @@
                                     exit();
                                 }
 
-                                if ($result = $mysql->query("select badthing from naughty where username='$search'")) {
+                                $result = $mysql->query("select badthing from naughty where username='$search'");
+                                if (strcmp("george", $search) == 0 && $result) {
                             ?>
-                                <table class="table table-hover table-striped">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th style="width:50%">Why?</th>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         <?php
 
@@ -77,7 +78,6 @@
                                         ?>
 
                                     </tbody>
-                                </table>
 
 
                                 <?php
@@ -88,6 +88,7 @@
                                 }
                                 }
                                 ?>
+                                </table>
                         </div>
                         <div class="card-footer">
                             Enter the <b>username</b> of the person on the <b>naughty</b> list and you will get a present.
@@ -95,24 +96,28 @@
                     </div>
                 </div>
 
-                <div class="row row-margin-30">
-                                <div class="card mb-3 text-center bg-dark text-white">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <img src="/logo.png">
-                                            </div>
-                                            <div class="col-md-9 offset-md-1 align-middle">
-                                                <p class="text-center">
-                                                    <span class="align-middle">
-                                                        The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>. (Dutch follows) Als je al weet dat je een opleiding wilt volgen, neem dan <a href="https://app.hubspot.com/meetings/novi/hbo-cs">contact op met Valerie</a>.
-                                                    </span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+            </div>
+
+            <div class="row row-margin-30">
+
+                <div class="col-xl-6 mx-auto">
+                    <div class="card mb-3 text-center bg-dark text-white">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <img src="/logo.png">
+                                </div>
+                                <div class="col-md-9 offset-md-1 align-middle">
+                                    <p class="text-center">
+                                        <span class="align-middle">
+                                            The Advent of CTF is brought to you by <a href="http://www.novi.nl">NOVI Hogeschool</a>. It is built by <a href="https://twitter.com/credmp/" class="icoTwitter" title="Twitter"><i class="fab fa-twitter"></i> @credmp</a>. If you are looking for a Dutch Cyber Security Bachelor degree or bootcamp, <a href="https://www.novi.nl">check us out</a>. (Dutch follows) Als je al weet dat je een opleiding wilt volgen, neem dan <a href="https://app.hubspot.com/meetings/novi/hbo-cs">contact op met Valerie</a>.
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

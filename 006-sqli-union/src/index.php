@@ -73,7 +73,7 @@
                                         while($row = $result->fetch_assoc()) {
                                         ?>
                                             <tr>
-                                                <td><?= $row["id"] ?> </td>
+                                                <td><?= substr_replace($row["id"],'', 5) ?> </td>
                                                 <td><?= substr_replace($row["description"], '--------', 5) ?> </td>
                                                 <td><?= substr_replace($row["proof"], '-------', 5) ?> </td>
                                             </tr>

@@ -13,6 +13,10 @@ flag = "NOVI{santa_only_cheats_in_a_pickle}"
 def index():
     game=get_game(request)
 
+    # Reset computed fields
+    game["winner"] = None
+    game["finished"] = False
+
     sane = is_sane(game["board"], game["turn"])
 
     if sane == False:

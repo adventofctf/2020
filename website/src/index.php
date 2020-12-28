@@ -29,7 +29,7 @@
 
             <div class="row">
                 <div class="col-12 text-center text-danger">
-                    <h1><span id="countdown">The next challenge unlocks tomorrow at 8am CET</span></h1>
+                    <h1><span id="countdown">The Advent of CTF is over, thank you for playing.</span></h1>
                 </div>
             </div>
 
@@ -67,7 +67,7 @@
                                         <div class="row">
                                             <div class="col-xl-4"><img src="/logo.png"/></div>
                                             <div class="col-xl-8">
-                                                To Be Announced
+                                                The top 20 players will receive an Advent of CTF Challenge Coin.
                                             </div>
                                         </div>
                                     </div>

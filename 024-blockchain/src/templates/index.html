@@ -141,5 +141,37 @@
     </body>
 </html>
 
+<!-- Development notes: Do not let santa see!
 
+def hash_string(string):
+    return hashlib.md5(string.encode('utf-8')).hexdigest()
+
+def hash_row(row):
+    conv = lambda i : i or ' '
+    res = [conv(i) for i in row] 
+    return hash_string(' '.join(res))
+
+def hash_board(board):
+    acc = ""
+    for row in board:
+        acc += hash_row(row)
+    return acc
+
+def verify_chain(game):
+    board=game["board"]
+    chain = game["chain"]
+
+    if len(chain) > 0:
+        if board != chain[-1]["board"]:
+            return False
+        
+    for i in range(len(chain)):
+        block=chain[i]
+        h = hash_board(block["board"])
+        h = hash_string(h + block["prev"])
+        if h != block["hash"]:
+            return False
+    return True
+
+-->
 

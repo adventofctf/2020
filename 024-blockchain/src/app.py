@@ -13,6 +13,10 @@ app.config['SECRET_KEY'] = 'Leer alles over Software Security bij Arjen (follow 
 def index():
     game=get_game(request)
 
+    # Reset computed fields
+    game["winner"] = None
+    game["finished"] = False
+    
     #print("CHAIN: %s" % game["chain"])
     #print("VERIFY: %s" % verify_chain(game))
     
@@ -22,6 +26,10 @@ def index():
     if sane == False or blockchain == False:
         game = reset_board()
 
+    if len(game["chain"]) == 0:
+        blockchain = False
+        game = reset_board()
+        
     game["sane"] = sane
     game["blockchain"] = blockchain
 
