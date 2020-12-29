@@ -1,0 +1,114 @@
+#+TITLE: Advent of CTF - Challenge 11
+#+SUBTITLE: "Filter"
+
+* Challenge
+
+Building on the previous challenge this adds a layer of complexity due to filtering and the use of multiple elements to achieve an exfiltration.
+
+In this challenge you will learn:
+
+- How to detect filtering
+- How to use =php://filter=
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-11/index_att
+:END:
+
+#+begin_quote
+Santa's book of secrets has upgraded its security. All should be fine now.
+#+end_quote
+
+The challenge starts with the same page as in [[../challenge-10/index.org][Challenge 10]]. As the description says that the security has been upgraded, it is fair to assume it is the same type of challenge, only with some added security features.
+
+#+CAPTION: The start of the challenge
+[[file:index_att/the-challenge.png]]
+
+Direct access to =flag.php= leads to the text /Direct access not permitted/. This means that this time it is not possible to get the flag from this page directly.
+
+#+CAPTION: The cookie
+[[file:index_att/cookie.png]]
+
+As with the previous challenge, there is a cookie for /zerooneone/. 
+
+#+CAPTION: The encoded cookie
+#+begin_src text
+eyJwYXRoIjoiLiIsInBhZ2UiOiJtYWluIn0=
+#+end_src
+
+As with almost all previous challenges a Base64 encoded string, a JSON structure, is stored in the cookie. Decoding it reveals 2 keys; =path= and =page=. The current values are =.=, for the current directory and =main= for the =main.php= page.
+
+#+CAPTION: The decoded cookie
+#+begin_src javascript
+{"path":".", "page":"main" }
+#+end_src
+
+The first thing to try is to change the =page= value to =flag=. This should include the =flag.php= file that is there according to the description.
+
+#+CAPTION: Use the flag as a page
+#+begin_src javascript
+{"path":".", "page":"flag" }
+#+end_src
+
+This, however, results in an error message. The message at the end of the line is /no direct access/, so apparently the file is there, but direct access to it is not allowed.
+
+#+CAPTION: Direct access error message
+[[file:index_att/flag-include.png]]
+
+Playing around with this payload might make you try to change the path. When you use more then 1 =.= the path will also throw an error.
+
+#+CAPTION: Include using many dots
+#+begin_src javascript
+{"path":"../../../../../../", "page":"/etc/passwd" }
+#+end_src
+
+The error message is displayed just like the previous one. So, the flag can not be retrieved directly and navigating the file system also seems to not work.
+
+#+CAPTION:Soo many dots error message
+[[file:index_att/dots.png]]
+
+Investigating ways to do a file inclusion in PHP will eventually bring you to extracting data using =php://filter=. This is part of [[https://www.php.net/manual/en/wrappers.php.php][PHP Wrappers]]. It basically allows you to filter resources through a conversion tool, such as =convert.base64-encode=. This seems like a great opportunity.
+
+#+CAPTION: Using PHP filters
+#+begin_src javascript
+{"path":".", "page":"php://filter/convert.base64-encode/resource=flag" }
+#+end_src
+
+It ends in an error message however. The error message says it is due to /blacklist/. 
+
+#+CAPTION: Blacklist error message
+[[file:index_att/blacklist.png]]
+
+So, some words that are used are part of a /blacklist/. This means that part of the thing that was in the payload was not allowed to be there. Playing with this you will find that the word /filter/ is not allowed in the =page= value. Similar in the =path= the word /base/ is not allowed.
+
+Thinking this challenge over the usage of the 2 parts of the JSON structure can be assumed to be something as in the below listing.
+
+#+CAPTION: Usage of JSON data
+#+begin_src php
+include($data["path"] . "/" . $data["page"] . ".php");
+#+end_src
+
+Using this knowledge and the insight as to what is allowed in both parts the PHP wrapper can be created as a 2 part string. The first part, with /filter/, in the =path= and the second part, with the /convert.base64-encode/, in the =page=.  
+
+#+CAPTION: The final payload
+#+begin_src javascript
+{"path":"php://filter", "page":"convert.base64-encode/resource=flag" }
+#+end_src
+
+The payload will result in a big blob of Base64 text to be presented on the page.
+
+#+CAPTION: The encoded flag.php
+[[file:index_att/extract.png]]
+
+Decoding the blob of text will show the contents of =flag.php=. The flag can be retrieved from the code.
+
+#+CAPTION: The flag
+[[file:index_att/flag.png]]
+
+Be sure to grab your points and the badge.
+
+#+CAPTION: The badge
+[[file:index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].
+ 

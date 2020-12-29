@@ -1,0 +1,54 @@
+#+TITLE: Advent of CTF - Challenge 18
+#+SUBTITLE: "Evaluations"
+
+* Challenge
+
+For today the challenge centers around NodeJS and the ever interesting Javascript.
+
+Today you will learn:
+
+- How to identify a Javascript injection
+- How to exploit a Javascript injection
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-18/index_att
+:END:
+
+#+begin_quote
+We created a calculator for Santa to figure out how many days until Christmas remain. It is not finished yet, it will only return what you give it. Sort of. The flag is in flag.txt.
+#+end_quote
+
+The challenge starts with an edit box which asks you to enter the number of days until Christmas. Entering any number will reflect this number back to you,
+
+#+CAPTION: Entering a number in the challenge
+[[file:index_att/challenge-start.png]]
+
+Entering any text in the challenge will result in a big error message. This error message reveals a lot about the challenge. It lists pretty much all the modules used to build the challenge. Clearly it is a =NodeJS= application that passes the input to the =eval= function.
+
+#+CAPTION: Entering text in the challenge
+[[file:index_att/error.png]]
+
+Testing the eval feature with a simple addition shows that valid code is returned evaluated. Lets try =1+1= and indeed it returns =2=.
+
+#+CAPTION: Math
+[[file:index_att/1plus1.png]]
+
+Looking around for =eval= and =payload= on google several resources can be found that have great introductions. You will notice it is vary similar to template injections. Lets build a sample first based off of Payload all the Things again.
+
+#+begin_src javascript
+{'test'}
+#+end_src
+
+As we know it is a NodeJS application the =fs.readFileSync= functionality, which is handily available in the app, can be used as well.
+
+#+begin_src javascript
+{fs.readFileSync('flag.txt', {encoding:'utf8', flag:'r'})}
+#+end_src
+
+Don't forget to also grab the badge.
+
+#+CAPTION: The badge
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

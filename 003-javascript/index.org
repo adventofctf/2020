@@ -1,0 +1,70 @@
+#+TITLE: Advent of CTF - Challenge 3
+#+SUBTITLE: "Javascript"
+
+* Challenge
+
+This challenge is aimed at understanding how web pages can be made more interactive, using Javascript. Javascript is a programming language for the web that is used in pretty much every web application you will come across.
+
+The things you learn in this challenge:
+
+- How you can view Javascript in your browser
+- Read some Javascript to figure out what is happening
+- Running Javascript you wrote yourself
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-3/index_att
+:END:
+
+The challenge opens up to a familiar sight; the login screen that was used in [[./../challenge-2/index.org][Challenge 2]]. The teaser still says not to try too hard, but surely it will not be as simple as the last one.
+
+#+CAPTION: The login screen
+[[file:index_att/login.png]]
+
+Browsing the source code of the HTML page, as we did in [[./../challenge-1/index.org][Challenge 1]] shows that this application uses a Javascript file. The name of the file is =login.js=, so that looks promising.
+
+#+CAPTION: Javascript source reference
+[[file:index_att/javascript-in-html.png]]
+
+Using the DevTools (F12) it is possible to examine the files used by an application. Go to /Debugger/ (or /Sources/ in Chrome) and click on =login.js=. You will be able to see the full Javacsript source that controls the login form.
+
+#+CAPTION: Javascript source in the DevTools
+[[file:index_att/javascript-source.png]]
+
+I have copied over the source of the function below so that it can be examined more easily.
+
+#+caption: checkPass()
+#+begin_src javascript
+var username = document.getElementById('username').value;
+var password = document.getElementById('password').value;
+
+var novi = '-NOVI';
+
+if (password == btoa(username + novi)) {
+    window.setTimeout(function() {
+        window.location.assign('inde' + 'x.php?username='+
+                               username +'&password=' + password);
+    }, 500);
+}
+#+end_src
+
+The logic of the function is quite simple. First it grabs the =username= and =password= from the form. These will contain the entries that can be entered by us, the user. Then a variable called =novi= is created and assigned the value =-NOVI=. The password is checked to ensure that the =password= that was entered is equal to =btoa(username + novi)=. This means that if the username =arjen= was entered, the password has to be =btoa("arjen-NOVI")=. The function =btoa= creates a Base64 string.
+
+Switch to the /Console/ view of the DevTools and copy =btoa("arjen-NOVI")= into the screen. It might warn you that copying is not allowed, follow the instructions to allow it. You should get a nice Base64 string.
+
+#+CAPTION: Base64 password has been created
+[[file:index_att/base64-password.png]]
+
+Now you can log in with the =username= of =arjen= and the =password= set to =YXJqZW4tTk9WSQ===. You will be presented with the flag for this challenge.
+
+#+CAPTION: The flag for this challenge
+[[file:index_att/flag.png]]
+
+You can grab your points from the CTFd instance, you should have at least 600 points (if you did not use the hints). Also don't forget to grab your badge from the [[https://badges.adventofctf.com][Badge Server]].
+
+#+CAPTION: The badge for challenge 3
+[[file:index_att/badge.png]]
+
+You have solved the challenge.
+
+Go back to the [[../../../index.org][homepage]].

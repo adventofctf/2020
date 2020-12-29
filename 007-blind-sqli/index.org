@@ -1,0 +1,84 @@
+#+TITLE: Advent of CTF - Challenge 7
+#+SUBTITLE: "Blind" / "My Mistakes"
+
+* Challenge
+
+Sometimes challenges have unexpected solutions. In this case I created a challenge, play-tested it and then decided to change it a bit to make it more attractive. However, my changes gave way to a slew of really easy unintended solutions. So where this challenge was meant to teach you about time based blind SQL injections, it turned out to be just a very simple straightforward SQL injection.
+
+What you will learn:
+- Identify SQL injections when there are not error messages
+- Use =SLEEP()= to extract data, character for character
+
+* Solutions
+
+So, there are at least 3 solutions to this challenge. Lets walk through them, from intended solution to unintended ones.
+
+** Solution 
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-7/index_att
+:END:
+
+The challenge starts with a new interface, the /Santabase/ and the user has the option to search by /username/ to retrieve data from the /naughty/ list. These are all hints to the names of objects in the database.
+
+#+CAPTION: The santabase interface
+[[file:index_att/santabase.png]]
+
+Searching for anything in the database will yield empty results, unless you have the right username of course. The empty resultset has a header /Why?/. This is important as any correctly formatted query will result in an empty table.
+
+#+CAPTION: Empty result set
+[[file:index_att/why.png]]
+
+When entering anything that breaks the query, the result will not contain the /Why?/ header. This is the clue that is left in order to construct a proper SQL query. As there is nothing else that can be used to retrieve information a more creative use of SQL is necessary.
+
+A test query that can be utilized here is =' or (select sleep(1)); #=. This will cause the retrieval to last at least 1 second. In case you have a slow internet connection it might be necessary to increate the 1 to a higher number to notice the delay correctly.
+
+As it is known that the =username= column is searched in the =naughty= table (or list) a query can be constructed that will take the value of =username= character by character to compare it against a known set. If it matches, the sleep can be used to indicate a match and else the query will return instantly.
+
+First, to get a single character from a field the =mid()= function can be used. In this case the following expression =mid(username,1,1= will return the first character from the field username. Also =substr()= might be used, which was learned in the previous challenge. I like to use =mid()= as it is shorter.
+
+In order  to get a sense of the data the query needs to sleep when it matches a character. This can be achieved by using an =if()= expression. The first parameter will be the match, the thing that says true or false on a match, the 2nd parameter is the thing that happens when they match, in this case =sleep(1)= and the 3rd parameter will be the thing that happens when there is no match. For now we can simply return =0= then.  
+
+Putting it all together creates the following listing. The username is check to see if the first character of =username= is an =a=. If it is, it will sleep 1 second and else return instantly.
+
+#+CAPTION: Check for the value of 'a' in username
+#+begin_src sql
+' or (select if(mid(username,1,1)='a', sleep(1), 0) from naughty); #
+#+end_src
+
+Using this strategy the full username can be retrieved from the database. It takes quite some queries, but it has been retrieved.
+
+#+CAPTION: Getting the username
+#+BEGIN_SRC sql
+' or (select if(mid(username,1,1)='e', sleep(1), 0) from naughty); #
+' or (select if(mid(username,2,1)='g', sleep(1), 0) from naughty); #
+' or (select if(mid(username,3,1)='i', sleep(1), 0) from naughty); #
+' or (select if(mid(username,4,1)='s', sleep(1), 0) from naughty); #
+' or (select if(mid(username,5,1)='c', sleep(1), 0) from naughty); #
+' or (select if(mid(username,6,1)='h', sleep(1), 0) from naughty); #
+' or (select if(mid(username,7,1)='e', sleep(1), 0) from naughty); #
+#+END_SRC
+
+Entering the username will show the flag in the /Why?/ table. The flag can be used to retrieve the points and the badge.
+
+#+CAPTION: The badge
+[[file:index_att/badge.png]]
+
+** Unintended Solution 1
+
+Due to my  editing of the challenge to make it more stack-able from a knowledge point of view I inadvertently created one of the easiest challenges in the entire game.  The most basic SQL injection actually showed the flag to the user.
+
+#+CAPTION: Getting the flag without all the fuzz
+#+begin_src sql
+' or 1=1 #
+#+end_src
+
+** Unintended Solution 2
+
+Getting the flag alone is an accomplishment, however knowing the username is the real thing in this challenge. Due to the same reason that the first unintended solution exists, there is an obvious way to grab this data with the /UNION SELECT/ from the previous challenge. Using this query the username is shown in the /Why?/ table.
+
+#+CAPTION: Grabbing the username using UNION SELECT
+#+begin_src sql
+' UNION SELECT username FROM naughty #
+#+end_src
+
+Go back to the [[../../../index.org][homepage]].

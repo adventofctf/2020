@@ -1,6 +1,0 @@
-#+TITLE: Writeup
-
-
-The =strcmp= will fail if the paramter is an array.
-
-Change the post parameter to =flag[]= instead of =flag= and the flag will show itself.

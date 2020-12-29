@@ -1,0 +1,81 @@
+#+TITLE: Advent of CTF - Challenge 10
+#+SUBTITLE: "Include"
+
+* Challenge
+
+The challenge today is to get the flag that is in =flag.php=. Today you will learn:
+
+- Local File Inclusions in PHP
+- Rainbow tables
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-10/index_att
+:END:
+
+#+begin_quote
+When files are included things can get real messy. The flag is in flag.php.
+#+end_quote
+
+The key to Local File Inclusions, LFI, is that you trick a program to include a file that is not included under normal circumstances. This challenge revolves around this concept. The challenge starts with an somewhat empty page.
+
+#+CAPTION: The start page of the challenge
+[[file:index_att/santa-book.png]]
+
+The challenge said that the flag is in =flag.php=. Go to the url =/flag.php= to see if it is available.
+
+#+CAPTION: The content of flag.php
+[[file:index_att/flag-php.png]]
+
+The hint on the page is that we as a user need to get promoted. There is no other clue as to what to do next. Browsing the DevTools (F12) will show that there is a cookie called =zeroten=. The contents is an URL encoded Base64. Decoding it yields a Base64 encode JSON structure, note the =eyJ=.
+
+#+begin_quote
+eyJwYWdlIjoibWFpbiIsInJvbGUiOiIxMmRlYTk2ZmVjMjA1OTM1NjZhYjc1NjkyYzk5NDk1OTY4Mz
+NhZGM5In0=
+#+end_quote
+
+Decoding the value will show a JSON structure with the keys =page= and =role=. The =role= is encoded. As the hint said it was an include challenge the reasonable thing to do is to change =page= from =main= to =flag=, assuming it will add the =.php= to it.
+
+#+CAPTION: The contents of the zeroten cookie
+#+begin_src javascript
+{"page":"main","role":"12dea96fec20593566ab75692c9949596833adc9"}
+#+end_src
+
+Change the value in the JSON structure and then Base64 encode it again.
+
+#+CAPTION: The modified JSON structure
+#+begin_src javascript
+{"page":"flag","role":"12dea96fec20593566ab75692c9949596833adc9"}
+#+end_src
+
+This does indeed include the =flag.php= into the main page, however it still shows that the user needs to get promoted.
+
+#+CAPTION: The flag.php has been included.
+[[file:index_att/flag-but-not-yet.png]]
+
+
+The rabbit hole in this challenge is that a seasoned tester might consider type juggling in the PHP language for the hash comparison. This is not the case in this challenge. The hash has to be replaced with something reasonable.
+
+Looking up the value on [[https://www.hashes.com][hashes.com]] will reveal that this hash is actually the =sha1= of the word =user=. The hash type can be identified by using the [[https://hashes.com/en/tools/hash_identifier][hash identifier]]. Looking up a hash in a list is called a rainbow table, a precomputed list of words and their hashes that you can search without needing to hash it yourself.
+
+#+CAPTION: The result of lookup on hashes.com
+[[file:index_att/hashes-com.png]]
+
+Using CyberChef the value of =admin= can be passed through the =sha1= encoder. This will result in =d033e22ae348aeb5660fc2140aec35850c4da997= as a value. Add the value to the JSON structure.
+
+#+CAPTION: The modified JSON structure with admin role
+#+begin_src javascript
+{"page":"flag","role":"d033e22ae348aeb5660fc2140aec35850c4da997"}
+#+end_src
+
+Encoding this structure into Base64 and adding it in the DevTools (F12) will reveal the flag after reloading the webpage.
+
+#+CAPTION: The flag
+[[file:index_att/flag.png]]
+
+Go grab the points and make sure to also share your badge on social media!
+
+#+CAPTION: The badge
+[[file:index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

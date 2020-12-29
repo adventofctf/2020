@@ -1,0 +1,59 @@
+#+TITLE: Advent of CTF - Challenge 1
+#+SUBTITLE: "The Source"
+
+* Challenge
+
+This is the first challenge in the Advent of CTF series. The first of a total of 24 that covers the entire month of December.
+
+As it is the first it is intended to be beginner friendly. It also is meant to get people familiar with the system I have setup to claim badges and points.
+
+** What you will learn
+
+The challenge will learn the player to:
+
+- Inspect page source
+- How to identify and decode *Base64* encoding
+- How to work with the Advent of CTF system
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/temp/site.org/writeups/advent-of-ctf/challenge-1/index_att
+:END:
+
+The challenge is available at [[https://01.adventofctf.com/][https://01.adventofctf.com/]]. Once requested the user is faced with a box to input Santa's password.
+
+#+CAPTION: Challenge webpage
+[[file:index_att/screenshot-20201129-134012.png]]
+
+Obviously there are hints on the page. The player needs to find a *password* to enter into the box. In the footer there is a reference to **star wars**, which was famous for the quote /Use the force, Luke!/. In a CTF context that might sound like /Use the source/. Using *Inspect source* will show something at the very bottom.
+
+#+CAPTION: An encoded string
+[[file:index_att/screenshot-20201129-134243.png]]
+
+The /hint/ in the comment is /This is an odd encoded thing right?/. The string that follows seems to be something that has been encoded. When the string is used as an input in [[https://gchq.github.io/CyberChef][CyberChef]] it will immediatly say there is a /Magic/ function it can apply.
+
+#+CAPTION: CyberChef magic wand
+[[file:index_att/screenshot-20201129-134509.png]]
+
+When you click the magic wand the text will be decoded. It will show ~advent_of_ctf_is_here~. This is the password that you can enter to unlock Santa's secrets.
+
+#+CAPTION: The flag
+[[file:index_att/success.png]]
+
+The flag can be entered into the score board at [[https://ctfd.adventofctf.com][https://ctfd.adventofctf.com]] and also a badge can be retrieved for social media. When you follow the link to the [[https://badges.adventofctf.com][Badge Service]] you can enter the flag.
+
+#+CAPTION: The badge service
+[[file:index_att/badge-service.png]]
+
+When you hit *Go!* a unique badge will be displayed with the ability to share on social media.
+
+#+CAPTION: The unique badge
+[[file:index_att/badge.png]]
+
+You have solved the challenge and claimed your points. You also claimed your social media badge! The challenge is completed.
+
+* Honorable Mentions
+
+I would like to take this moment to thank /Semper Fight/ (@DennisFeijth on Twitter) for finding a bug in the Badge Service. Fixed before we even started.
+
+Go back to the [[../../../index.org][homepage]].

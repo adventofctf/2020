@@ -1,0 +1,69 @@
+#+TITLE: Advent of CTF - Challenge 15
+#+SUBTITLE: "Juggler++"
+
+* Challenge
+
+This challenge is a partner to the previous one, it focuses on an oddity in the PHP programming language.
+
+What you will learn:
+
+- Type juggling in =strcmp=
+
+* Solution
+
+When the challenge starts the user is asked to enter a flag to compare it to the flag in the challenge. Obviously it is not possible to know the flag unless you solve the challenge, so there has to be another way. Lets examine the source code on the page.
+
+#+CAPTION: Sourcecode from the challenge
+#+BEGIN_SRC php
+<?php
+
+ini_set('display_errors', 0);
+
+include("flag.php");
+
+if (isset($_POST["flag"])) {
+    $f = $_POST["flag"];
+
+    if (strcmp($f, $flag) == 0 || sha1($flag) == sha1($f)) {
+        echo $flag;
+        die();
+    }
+}
+
+header("Location: /index.php?error=Wrong flag");
+exit();
+
+?>
+#+END_SRC
+
+It start the same as the previous challenge. This time it checks to see if =flag= is set as a /post/ variable. The =flag= is then compared to the flag stored in the application itself. If they don't match, the =sha1= of the flags have to match.
+
+The rabbit hole here is that you might want to try and generate a magic hash that can be used to compare against the hash of the stored flag, but this will be fruitless.
+
+The interesting function here is =strcmp=. It compares 2 strings and will return =0= when they are the same.However, when a parameter to the function is not a string an error will be thrown.
+
+#+BEGIN_QUOTE
+Warning: strcmp() expects parameter 1 to be string, array given in php shell code on line 1
+#+END_QUOTE
+
+When this happens the result of the =strcmp= operation will be =NULL=. When =NULL= is compared to =0= in a loose manner it will return =true=. Within firefox, post a request to the system and /Edit & Resend/ it using DevTools (F12). Change the parameter in the requestbody from =flag= to =flag[]=, making it a PHP array.
+
+#+CAPTION: The payload
+#+BEGIN_SRC text
+flag[]=test
+#+END_SRC
+
+Within firefox this will look like the following screenshot.
+
+#+CAPTION: Tamper the parameter of get_flag.php
+[[./index_att/tamper.png]]
+
+The response of the request will contain the flag.
+
+#+BEGIN_SRC text
+NOVI{typ3_juggl1ng_f0r_l1fe_seriously}
+#+END_SRC
+
+Also, do not forget to claim your badge.
+
+[[./index_att/badge.png]]

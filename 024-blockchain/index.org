@@ -1,0 +1,128 @@
+#+TITLE: Advent of CTF - Challenge 24
+#+SUBTITLE: "Final Battle"
+
+* Challenge
+
+The end of the Advent of CTF is here. A last battle remains for the honor of Santa.
+
+What you will learn today:
+
+- The basics of a blockchain
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-24/index_att
+:END:
+
+The challenge starts out just like [[./../challenge-20/index.org][challenge 20]], with a small difference. In the footer it now says =Blockchain? True=.
+
+#+CAPTION: Start of the challenge
+[[file:index_att/challenge-start.png]]
+
+In the source of the index page there are some development notes that will help in solving this challenge. They basically explain the way the board is hashed for use in the blockchain.
+
+#+CAPTION: Development notes
+[[file:index_att/dev-notes.png]]
+
+Using the same technique as used in the challenge 20 the stored game state can be read.
+
+#+CAPTION: The game state
+[[file:index_att/game-state.png]]
+
+The game state is now significantly larger then before. Most of it is due to the key =chain=, which is the blockchain.
+
+A blockchain works by taking a known value, a =hash= that has been previously computed, then taking a computation over the thing that is in the =block=, generally also a hash, and then combining these 2 values to compute a new hash. So, if we start with the hash =A= and then compute a hash for our block =B= the resulting hash will be that of =A+B=, which will then be passed on to the next block. The block, =C=, will then take its own hash and combine it with the previous hash to form a new one =A+B+C=. The chain is only valid if all hashes are correct, meaning it is impossible to change a single block, without recomputing all hashes.
+
+Luckily we have the computation logic from the index page:
+
+#+CAPTION: The blockchain logic
+#+begin_src python
+def hash_string(string):
+    return hashlib.md5(string.encode('utf-8')).hexdigest()
+
+def hash_row(row):
+    conv = lambda i : i or ' '
+    res = [conv(i) for i in row]
+    return hash_string(' '.join(res))
+
+def hash_board(board):
+    acc = ""
+    for row in board:
+        acc += hash_row(row)
+    return acc
+
+def verify_chain(game):
+    board=game["board"]
+    chain = game["chain"]
+
+    if len(chain) > 0:
+        if board != chain[-1]["board"]:
+            return False
+
+    for i in range(len(chain)):
+        block=chain[i]
+        h = hash_board(block["board"])
+        h = hash_string(h + block["prev"])
+        if h != block["hash"]:
+            return False
+    return True
+#+end_src
+
+From the function =verify_chain= it is clear that the last entry of the chain has to be the current board state for it to pass inspection. From there the length of the chain is iterated to calculate and compare the hashes. Note that the =verify_chain= function does not check to see how many entries should be on the chain itself.
+
+So, from this logic it is clear that a new game state can be created that only has 1 entry in the blockchain, the winning board, and that only that entry will require a new hash calculation. Luckily all the elements needed to do the calculation were given.
+
+Working from the previous solution the following script will create a new payload.
+
+#+CAPTION: Calculating the payload
+#+begin_src python
+import base64
+import pickle
+import hashlib
+
+data="gASVGQMAAAAAAAB9lCiMBWJvYXJklF2UKF2UKIwBT5RoBE5lXZQoaASMAViUaAZlXZQoTmgGaAZlZYwEdHVybpRoBIwIZmluaXNoZWSUiYwGd2lubmVylIwAlIwEc2FuZZSIjApibG9ja2NoYWlulIiMBWNoYWlulF2UKH2UKIwFYm9hcmSUXZQoXZQoTk5OZV2UKE5OTmVdlChOTmgGZWWMBHByZXaUjCBjZWYyMTVjNWJlOGNmNjNmY2YzZDQzZWNmMjUxMGIzM5SMBGhhc2iUjCBlN2RjOGUxZjdhNjc4OGJjMGNiNjg0MTUzOGIyMTZlOJR1fZQojAVib2FyZJRdlChdlChoBE5OZV2UKE5OTmVdlChOTmgGZWWMBHByZXaUaBmMBGhhc2iUjCBmYzkzMjM2YjVlZWE1ZjFkNTVlMmI1YjMwOGQ2NzM5MJR1fZQojAVib2FyZJRdlChdlChoBE5OZV2UKE5oBk5lXZQoTk5oBmVljARwcmV2lGgijARoYXNolIwgYThkYzBkM2RhMjkwZDFlODk0ZWFhZmZjYjk4Mzk4YzmUdX2UKIwFYm9hcmSUXZQoXZQoaARoBE5lXZQoTmgGTmVdlChOTmgGZWWMBHByZXaUaCuMBGhhc2iUjCBlNzRmNWIyMmY1MjEzYmE0YzI0NDk3NTljZTkxYzJhYZR1fZQojAVib2FyZJRdlChdlChoBGgETmVdlChOaAZoBmVdlChOTmgGZWWMBHByZXaUaDSMBGhhc2iUjCBlZjI1NTE0ZGZmYmY4MjQ3Y2ZmNjA2M2JlOTBmMmQ1NJR1fZQojAVib2FyZJRdlChdlChoBGgETmVdlChoBGgGaAZlXZQoTk5oBmVljARwcmV2lGg9jARoYXNolIwgZTNhNGMwMzdiZGYxNTRiMzQ0ZWQ5YmQxNjQzYTYyOWSUdX2UKIwFYm9hcmSUXZQoXZQoaARoBE5lXZQoaARoBmgGZV2UKE5oBmgGZWWMBHByZXaUaEaMBGhhc2iUjCBjMjQwZmExNjE3MzdjOTY3ZWNlNWZkOTQ2NzJhYjBmOJR1ZXUu"
+
+game=base64.b64decode(data)
+exploit=pickle.loads(game)
+
+exploit["board"]=[['O', 'O', 'X'], ['O', None, 'X'], [None, 'X', 'X']]
+# Take the last chain entry
+last=exploit["chain"][-1]
+
+# Reset the chain to empty
+exploit["chain"]=[]
+# Put a winning board in the saved last entry
+last["board"]=[['O', 'O', 'X'], ['O', None, 'X'], [None, 'X', 'X']]
+# Add the last entry to the now empty chain
+exploit["chain"].append(last)
+
+def hash_string(string):
+    #print("HASH STRING: %s" % string)
+    return hashlib.md5(string.encode('utf-8')).hexdigest()
+
+def hash_row(row):
+    conv = lambda i : i or ' '
+    res = [conv(i) for i in row]
+    return hash_string(' '.join(res))
+
+def hash_board(board):
+    acc = ""
+    for row in board:
+        acc += hash_row(row)
+    return acc
+
+# Create a new hash for the board
+h = hash_board(exploit["chain"][-1]["board"])
+h = hash_string(h + exploit["chain"][-1]["prev"])
+# Update the hash for the last chain entry
+exploit["chain"][-1]["hash"]=h
+
+print( base64.b64encode(pickle.dumps(exploit)).decode('utf-8'))
+#+end_src
+
+After you grab the flag also be sure to grab the badge!
+
+#+CAPTION: The badge
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

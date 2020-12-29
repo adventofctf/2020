@@ -1,0 +1,196 @@
+#+TITLE: Advent of CTF - Challenge 4
+#+SUBTITLE: "Obfuscation"
+
+* Challenge
+
+This challenge will teach you that everything that is in the browser is under your control. Even if someone took extraordinary measures to obfuscate some logic, as long as it is in the browser, you control it.
+
+What you will learn:
+
+- What Local Storage is in the browser
+- How to examine Javascript code in the browser
+- How to run code that is part of a web application in the browser
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-4/index_att
+:END:
+
+Day 4 starts with a screen saying that you are =User 0= and that you do not have access to the /special present/.
+
+#+CAPTION: Startup screen
+[[file:index_att/startup.png]]
+
+** Analysis
+
+Examining the parts of the browser that we are now familiar with shows that a =login.js= is included again. In the DevTools (F12) the code for the challenge is listed. The full listing is in the =Detail= block below.
+
+#+HTML: <details><summary><b>login.js</b> (Full version)</summary>
+#+begin_src javascript
+function startup() {
+    key = localStorage.getItem('key');
+
+    if (key === null) {
+        localStorage.setItem('key', 'eyJ1c2VyaWQiOjB9.1074');
+    }
+}
+
+var _0x1fde=['charCodeAt'];
+(function(_0x93ff3a,_0x1fded8){
+    var _0x39b47b=function(_0x54f1d3){
+        while(--_0x54f1d3){
+            _0x93ff3a['push'](_0x93ff3a['shift']());
+        }};
+    _0x39b47b(++_0x1fded8);
+}(_0x1fde,0x192));
+var _0x39b4=function(_0x93ff3a,_0x1fded8){
+    _0x93ff3a=_0x93ff3a-0x0;
+    var _0x39b47b=_0x1fde[_0x93ff3a];
+    return _0x39b47b;
+};
+function calculate(_0x54f1d3){
+    var _0x58628b=_0x39b4,_0xc289d4=0x0;
+    for(let _0x19ddf3 in text){
+        _0xc289d4+=text[_0x58628b('0x0')](_0x19ddf3);
+    }return _0xc289d4;
+}
+
+function check() {
+    key = localStorage.getItem('key');
+    hash = window.location.search.split('?')[1];
+
+    if (key !== null && hash != 'token='+key) {
+        parts = key.split('.');
+        text = atob(parts[0]);
+        checksum = parseInt(parts[1]);
+
+        count = calculate(text);
+
+        if (count == checksum) {
+            setTimeout(function(){
+                window.location="index.php?token=" + key;
+            }, 5000);
+        }
+    }
+}
+
+startup();
+check();
+#+end_src
+#+HTML: </details>
+
+The most significant part of the code that stands out is a highly obfuscated piece of Javascript. This is clearly intended to hide its workings from the user. It does not make a lot of sense to decode the workings of it, do note that near the end a readable function is declared, called =calculate=.
+
+#+CAPTION: Obfuscated javascript
+#+begin_src javascript
+var _0x1fde=['charCodeAt'];
+(function(_0x93ff3a,_0x1fded8){
+    var _0x39b47b=function(_0x54f1d3){
+        while(--_0x54f1d3){
+            _0x93ff3a['push'](_0x93ff3a['shift']());
+        }};
+    _0x39b47b(++_0x1fded8);
+}(_0x1fde,0x192));
+var _0x39b4=function(_0x93ff3a,_0x1fded8){
+    _0x93ff3a=_0x93ff3a-0x0;
+    var _0x39b47b=_0x1fde[_0x93ff3a];
+    return _0x39b47b;
+};
+function calculate(_0x54f1d3){
+    var _0x58628b=_0x39b4,_0xc289d4=0x0;
+    for(let _0x19ddf3 in text){
+        _0xc289d4+=text[_0x58628b('0x0')](_0x19ddf3);
+    }return _0xc289d4;
+}
+#+end_src
+
+The function, =calculate=, is used in another function. This function is called =check()=. Reading the code it will extract a =key= from the Local Storage of the browser. It will also take a value from the =window.location.search= variable of the browser. This is a reference to the addressbar, so it tries to get the URL that is currently in it.
+
+If both are set and the =hash= variable equals ='token'+key= (which was taken from the local storage) it will go into the main check logic.
+
+#+CAPTION: Function check()
+#+begin_src javascript
+function check() {
+    key = localStorage.getItem('key');
+    hash = window.location.search.split('?')[1];
+
+    if (key !== null && hash != 'token='+key) {
+        parts = key.split('.');
+        text = atob(parts[0]);
+        checksum = parseInt(parts[1]);
+
+        count = calculate(text);
+
+        if (count == checksum) {
+            setTimeout(function(){
+                window.location="index.php?token=" + key;
+            }, 5000);
+        }
+    }
+}
+#+end_src
+
+The =token= that is passed through the URL and Local Storage is =split= on a =.=, breaking it up in 2 pieces. The first part is Base64 decoded using =atob()= and the 2nd part is converted to an integer using =parseInt()=. The text is passed to the obfuscated =calculate= function. If the result of =calculate= is the same as the 2nd part of the token then the browser is refreshed to the index page.
+
+So, the challenge is to create a token that can pass these conditions.
+
+The other function in the code is =startup()=. If no value is already in the local storage it will set the default of =eyJ1c2VyaWQiOjB9.1074=. 
+
+#+CAPTION: Function startup()
+#+begin_src javascript
+function startup() {
+    key = localStorage.getItem('key');
+
+    if (key === null) {
+        localStorage.setItem('key', 'eyJ1c2VyaWQiOjB9.1074');
+    }
+}
+#+end_src
+
+At the end of the javascript both =startup= and =check= are called to first set a default value if necessary and secondly to verify if the URL of the page can be used.
+
+#+CAPTION: Startup code
+#+begin_src javascript
+startup();
+check();
+#+end_src
+
+** Solve
+
+So, lets examin the default value. It is a token that reads =eyJ1c2VyaWQiOjB9.1074=. From the code we know that it is 2 parts, a payload and a checksum. From previous challenges we know that anything that starts with =eyJ= is most likely a Base64 encoded JSON structure. Using CyberChef we can read it's value: ={"userid":0}=.
+
+It indeed holds a JSON structure that holds the userid. This is the same userid that is shown on the page. Changing it to ={"userid":1}= and encoding it with Base64 will yield the value  =eyJ1c2VyaWQiOjF9=. You can try to use this value with the old checksum to see what happens. Using the url https://04.adventofctf.com/index.php?token=eyJ1c2VyaWQiOjF9.1074 will give some interesting results.
+
+#+CAPTION: User unknown
+[[./index_att/user-unknown.png]]
+
+There are 2 things at play here. First the value is compared to the local storage, which we did not change yet, and secondly the checksum is checked. The logic for the checksum is obfuscated, so how will we know what it should be?
+
+Looking at the code again you will see that the checksum is check using =calculate()= which will have a parameter of the decoded text, lets try that in the browser. Go the the /Console/ tab and enter =calculate('{"userid":1}')=.
+
+#+CAPTION: Javascript error calling calculate
+[[file:index_att/console-error.png]]
+
+Looking back at the code you might notice that the code does something sneaky, it is a CTF after all. Instead of using the parameter passed to =calculate= to do the calculation it reads a global variable called =text= for its input. Lets change our approach, set a =text= variable with the JSON structure and call =calculate= again.
+
+#+CAPTION: Calculate a checksum
+[[file:index_att/calculate_checksum.png]]
+
+So, for a =userid= of 1 the checksum changes to =1075=. Putting it together the new token will be: =eyJ1c2VyaWQiOjF9.1075=. Put this value into the local storage (either using javascript as the code above does, or through the =DevTools > Storage > Local storage= pane).
+
+#+CAPTION: New token in local storage
+[[file:index_att/local_storage.png]]
+
+Now, call the URL using your new token. The system will register that you are now user 1 and give you access to the flag.
+
+#+CAPTION: The flag
+[[file:index_att/flag.png]]
+
+Next to the points the flag also gives you access to the /Toyman/ badge. It is awesome, share it on all your socials!
+
+#+CAPTION: The badge
+[[file:index_att/badge.png]]
+
+The challenge has been solved. Onto the next one.
+
+Go back to the [[../../../index.org][homepage]].

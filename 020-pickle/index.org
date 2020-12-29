@@ -1,0 +1,75 @@
+#+TITLE: Advent of CTF - Challenge 20
+#+SUBTITLE: "The Game"
+
+* Challenge
+
+In this challenge a change of pace again. You are faced with a game that you are set to loose. How can you still win? Well, hack the game state of course!
+
+What you will learn today:
+
+- Identify serialized data
+- Manipulate serialized data
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-20/index_att
+:END:
+
+The challenge loads with a tic-tac-toe board in which =O= is set to win. Your goal is to make =X= win.
+
+#+CAPTION: Game start state
+[[file:index_att/challenge-start.png]]
+
+Looking around the webpage you will notice there is a /cookie/ called =game=. This cookie starts with =gA=. You will quickly notice that it is a Base64 encoded cookie, as you have seen many times during the CTF.
+
+Decoding does not yield anything useful. Examining it in a hex dump is a little more readable.
+
+#+CAPTION: Examine the cookie
+#+begin_src text
+$ echo -n "gASVWgAAAAAAAAB9lCiMBWJvYXJklF2UKF2UKIwBT5RoBE5lXZQoaASMAViUaAZlXZQoTmgGaAZlZYwEdHVybpRoBIwIZmluaXNoZWSUiYwGd2lubmVylIwAlIwEc2FuZZSIdS4=" \
+  | base64 -d | xxd
+00000000: 8004 955a 0000 0000 0000 007d 9428 8c05  ...Z.......}.(..
+00000010: 626f 6172 6494 5d94 285d 9428 8c01 4f94  board.].(].(..O.
+00000020: 6804 4e65 5d94 2868 048c 0158 9468 0665  h.Ne].(h...X.h.e
+00000030: 5d94 284e 6806 6806 6565 8c04 7475 726e  ].(Nh.h.ee..turn
+00000040: 9468 048c 0866 696e 6973 6865 6494 898c  .h...finished...
+00000050: 0677 696e 6e65 7294 8c00 948c 0473 616e  .winner......san
+00000060: 6594 8875 2e                             e..u.   
+#+end_src
+
+Obviously the cookie holds information about the game. There is a reference to a board, turn, finished and winner.
+
+Searching around for various types of serialization format you will quickly rule out the most obvious ones, Java nad .Net. You will come to the [[https://docs.python.org/3/library/pickle.html][Python Pickle]]. Lets test that.
+
+#+CAPTION: Exploring the python pickle library
+#+begin_src python
+>>> import base64
+>>> import pickle
+>>> data="gASVWgAAAAAAAAB9lCiMBWJvYXJklF2UKF2UKIwBT5RoBE5lXZQoaASMAViUaAZlXZQoTmgGaAZlZYwEdHVybpRoBIwIZmluaXNoZWSUiYwGd2lubmVylIwAlIwEc2FuZZSIdS4="
+>>> game=base64.b64decode(data)
+>>> exploit=pickle.loads(game)
+>>> exploit
+{'board': [['O', 'O', None], ['O', 'X', 'X'], [None, 'X', 'X']], 'turn': 'O', 'finished': False, 'winner': '', 'sane': True}
+#+end_src
+
+That seems like a winner! It loads correctly and shows the complete board and all metadata. Play around with the various options here, will it work when setting =winner= tp =X=? or change the turn to =X=? All these attributes seem to be calculated runtime as well, so no luck. Lets change the board state instead.
+
+#+begin_src python
+import base64
+import pickle
+data="gASVWgAAAAAAAAB9lCiMBWJvYXJklF2UKF2UKIwBT5RoBE5lXZQoaASMAViUaAZlXZQoTmgGaAZlZYwEdHVybpRoBIwIZmluaXNoZWSUiYwGd2lubmVylIwAlIwEc2FuZZSIdS4="
+game=base64.b64decode(data)
+exploit=pickle.loads(game)
+
+exploit["board"]=[['O', 'O', 'X'], ['O', None, 'X'], [None, 'X', 'X']]
+
+print( base64.b64encode(pickle.dumps(exploit)).decode('utf-8'))
+#+end_src
+
+Changing the board to a winning state for =X=, while taking in account the play order, solves the challenge. In this game =X= started the game, so there has to be 1 =O= less in order to be a valid board.
+
+Do not forget to grab the badge!
+
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

@@ -1,0 +1,60 @@
+#+TITLE: Advent of CTF - Challenge 12
+#+SUBTITLE: "Command"
+
+* Challenge
+
+The challenge focuses on the ability to extract data from an environment using a command injection.
+
+What you will learn:
+
+- Identifying a command injection
+- Using shell processing to execute commands
+- Redirect command output
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-12/index_att
+:END:
+
+The challenge starts with a destination check. Apparently you can enter an IP address to check availability of the destination. The IP address is a hint due to its use in command injections. When you enter an IP address to check availability generally it will be passed to =ping= as an argument.
+
+#+CAPTION: Start of the challenge
+[[file:index_att/start.png]]
+
+Entering any valid input will give a timestamp together with an /Destination check was OK/. 
+
+#+CAPTION: Entering valid input
+[[file:index_att/valid-input.png]]
+
+However, when you enter something that breaks a command line as a ='=, an errormessage is displayed. It makes clear that the command is being executed using =bash=. The only real output that has been noticeable up to now has been error messages. On a unix system the error messages are printed on =STDERR=.  
+
+#+CAPTION: Forcing an error message
+[[file:index_att/error.png]]
+
+Given the idea that messages on =STDERR= are being displayed it stands to reason that the user might be able to execute commands and see their output by redirecting to =STDERR=. The default way to do this in Linux is to use =1>&2=. However trying this will result in /2: Permission denied/. From the message it seems that the =&= has been stripped and the command was translated to =1>2=, which would write =1= to the file =2=, which is not permitted. This method can be used to check what characters are filtered or not. After some testing it seems the following are filtered: =&;-`|=
+
+#+CAPTION: Redirecting output
+[[file:index_att/output-redirect.png]]
+
+However, there is a special device called =/dev/stderr= that will do the same thing; writing to =/dev/stderr= will result in the text on =STDERR= and thus an error message will be displayed. From the text it is clear that the application uses =nslookup= to do a check.
+
+#+CAPTION: Redirecting using stderr
+[[file:index_att/output-redirect-stderr.png]]
+
+The problem now is that, in order to get the flag a command like =cat= is required to read it. But all characters that normally will give an additional command execution are filtered out. During the filter check it was clear that the =$= was not filtered however. This can be used to create shell expansions: =$()=. By using =$(ls > /dev/stderr)= the findings can be combined to perform a shell expansion, which executes the command and gives the result back to the calling command line. The result is not that important, only the execution in the shell expansion. 
+
+#+CAPTION: Using /dev/stderr for redirection
+[[file:index_att/stderr.png]]
+
+Using this trick, the contents of the file =/flag.txt= can be read into =/dev/stderr= to reveal the flag.
+
+#+CAPTION: Flag
+[[file:index_att/flag.png]]
+
+With that the puzzle is solved and the points can be retrieved. Do not forget to grab the badge as well!
+
+#+CAPTION: The badge
+[[file:index_att/badge.png]]
+
+
+Go back to the [[../../../index.org][homepage]].

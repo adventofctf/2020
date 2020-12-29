@@ -1,0 +1,128 @@
+#+TITLE: Advent of CTF - Challenge 14
+#+SUBTITLE: "Juggler"
+
+* Challenge
+
+This is the first challenge that deals with PHP language gotcha's. What you will learn:
+
+- Read some PHP
+- PHP Types
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/stack/NOVI/AdventOfCTF/writeups/challenge-14/index_att
+:END:
+
+[[./index_att/badge.png]]
+
+#+BEGIN_QUOTE
+We are testing a new 2 factor security system for Santa's deepest secrets. It should be pretty secure!
+#+END_QUOTE
+
+When the challenge starts something new shows up; the actual code to the challenge!
+
+#+CAPTION: Start of the challenge
+[[file:index_att/start.png]]
+
+This is a unique starting point as it is completely transparent what is required to solve this challenge. The entire source code of the logic that has to be beaten is readable.
+
+#+CAPTION: Challenge source code
+#+BEGIN_SRC php
+<?php
+
+ini_set('display_errors', 0);
+
+include("flag.php");
+
+if (isset($_POST["password"], $_POST["verifier"])) {
+    $password = $_POST["password"];
+    $verifier = $_POST["verifier"];
+
+    $hash = sha1($password + $secret_salt);
+    $reference = substr($hash, 0, 7);
+
+    if ($verifier === $reference) {
+        echo $flag;
+        die();
+    }
+}
+
+header("Location: /index.php?error=That was not right.");
+exit();
+
+?>
+#+END_SRC
+
+Starting at the top the /ini_set/ will tell PHP to not show any errors to the user. The next line includes a file called =flag.php=, making its variables available inside this code. The =if= statement then checks to see if both =password= and =verifier= are set. For convenience they are then set to local variables.
+
+The main logic here is that a =hash= is created using the =password= and a =secret_salt=. The =secret_salt= is defined inside =flag.php= and contains an unknown value. Then a =reference= is taken from the hash as a 7 character substring of the generated hash. The =verifier= is then compared to the =reference=.
+
+This means that all that needs to be done is to find a value that will be returned from =sha1= that can be known when the input =password= is compared with an unknown string.
+
+If you are familiar with Type Juggling in PHP your first guess might go to a [[https://www.whitehatsec.com/blog/magic-hashes/][magic hash]]. This is not the case here, as the hash itself is compared in a non loose way using ===== instead of ====. That is the hint that it is not a challenge to find a magic hash.
+
+The trick to this challenge is to generate a /sha1/ hash when an unknown value is involved.
+
+The version of PHP inside the challenge is =7.3.23=. This is unknown at the time you perform the challenge, but can be used for any experiments you might want to do while reading this write-up. PHP has an interactive shell that can be used to test payloads, it can be started using =php -a=.
+
+When running the code in the interactive shell you might notice something odd:
+
+#+CAPTION: PHP interactive shell with sha1
+#+BEGIN_SRC text
+php > echo sha1("value" + "value");
+
+Warning: A non-numeric value encountered in php shell code on line 1
+
+Warning: A non-numeric value encountered in php shell code on line 1
+b6589fc6ab0dc82cf12099d1c2d40ab994e8410c
+#+END_SRC
+
+Although the code looks correct, the =+= is not a string concatenation operation in PHP, it is used for numeric addition. As there are no errors allowed to display this is unknown to the user. The fact that PHP expects a numeric operation this can be exploited. Lets examine what happen when you add 2 strings in which one of them is a number.
+
+#+CAPTION: Understanding addition with strings
+#+BEGIN_SRC text
+php > echo "10" + "value";
+
+Warning: A non-numeric value encountered in php shell code on line 1
+10
+#+END_SRC
+
+PHP will drop the string and return the number. But what happens when 2 strings that are not numbers are combined?
+
+#+CAPTION: Adding 2 strings is 0
+#+BEGIN_SRC text
+php > echo "value" + "value";
+
+Warning: A non-numeric value encountered in php shell code on line 1
+
+Warning: A non-numeric value encountered in php shell code on line 1
+0
+#+END_SRC
+
+The addition renders a =0= as a result. So when the =secret_salt= is not a number, then the result could always be a =0=. The =sha1= of =0= is =b6589fc6ab0dc82cf12099d1c2d40ab994e8410c=. This would mean that any password would always create a hash that starts with =b6589fc=. Testing this sadly does not work. But this provides another hint; the =secret_salt= is a number.
+
+So if the hash is not created over the value =0= what else can it be? PHP has the concept of =INF=, as it will not overflow a number. So if it is possible to add a high enough number to the =secret_salt= the hash will be done over =INF= instead of =0=. One way to write a large number is the use the =e= syntax.
+
+#+CAPTION: PHP interactive shell trying random numbers
+#+BEGIN_SRC text
+php > echo 1e100 + 123213213;
+1.0E+100
+php > echo 1e300 + 123213213;
+1.0E+300
+php > echo 1e309 + 123213213;
+INF
+#+END_SRC
+
+By means of experimentation it becomes clear that the value of =1e309= will overflow the number into =INF=.
+
+#+CAPTION: sha1 of INF
+#+BEGIN_SRC text
+php > echo sha1(INF);
+55c1943f65c7c105ae98e6703cd64127b6585656
+#+END_SRC
+
+So, using the value =1e309= as a password and the verifier as =55c1943= will pass the check completely and show the flag.
+
+The only think on screen will be =NOVI{typ3_juggl1ng_f0r_l1fe}=.
+
+Go back to the [[../../../index.org][homepage]].

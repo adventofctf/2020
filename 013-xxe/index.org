@@ -1,0 +1,97 @@
+#+TITLE: Advent of CTF - Challenge 13
+#+SUBTITLE: "XML"
+
+* Challenge
+
+This challenge deals with the insecurities of XML. On of the best documented "features" of XML is the ability to use Entities to extract data from a system, it is called XML eXternal Entities or XXE.
+
+What you will learn today:
+
+- Edit and Resend requests with Firefox
+- Identify an XML file
+- Extract data using php filters (as we did in the last challenge)
+
+* Solution
+:PROPERTIES:
+:ATTACH_DIR: /home/arjen/Projects/credmp.github.io/writeups/advent-of-ctf/challenge-13/index_att
+:END:
+
+The challenge starts with a simple page listing the result of a post request.
+
+#+CAPTION: Start screen
+[[file:index_att/start.png]]
+
+As this challenge requires the user to send a /POST/ request to the webpage something more needs to be done to even start the challenge, a /POST/ request needs to be made. There are many options, such as /Burp/, /curl/ and many more custom made HTTP tools. For this writeup the DevTools (F12) will be used in Firefox (remember I said Firefox is the best tool here).
+
+#+CAPTION: DevTools Network
+[[file:index_att/devtools.png]]
+
+Right click the line that performs a /GET/ on the =/= resource. Then select the option /Edit and Resend/ to modify this request.
+
+#+CAPTION: Edit and resend
+[[file:index_att/edit-and-resend.png]]
+
+Change the method from /GET/ to /POST/. Also, something should actually be posted. Try something like /appelflap/, or any other text really.
+
+#+CAPTION: XML Errors
+[[file:index_att/error-response.png]]
+
+The result of the modified request is that it shows a bunch of /XML/ loading errors. So apparently the payload is interpreted as an XML file. Searching around for XML file issues you will land at the[[https://owasp.org/www-project-top-ten/2017/A4_2017-XML_External_Entities_(XXE)][OWASP Top 10 XXE]] page. There are some samples on the page that can be used
+
+#+CAPTION: Sample XXE
+#+begin_src xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<foo>&xxe;</foo>
+#+end_src
+
+Using this file as the request body will return the contents of the =/etc/passwd= file. XXE has been confirmed!
+
+[[file:index_att/passwd.png]]
+
+As it is known the flag is in =flag.php= and from the errors it is already clear that this file is next to =index.php= in =/var/www/html=, the payload can be modified to retrieve that file.
+
+#+CAPTION: Payload 1 for flag.php
+#+begin_src xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "file:///var/www/html/flag.php" >]>
+<foo>&xxe;</foo>
+#+end_src
+
+The result is somewhat unexpected, which makes this a fun instead of straightforward, challenge.
+
+#+CAPTION: Result of failed payload
+[[file:index_att/failed-flag.png]]
+
+The error message says that it encountered an invalid element name. This means that it could read the file, but that the file is malformed for the XML reader. There are several ways to bypass this limitation, such as =CDATA= blocks, but as it is not possible to use an external service to retrieve an external DTD, something needs to be used that is available in the PHP xml parser.
+
+In the last challenge the =filter= was introduced. Leverage this filter to perform the same extraction of the file.
+
+#+CAPTION: XML Payload
+#+begin_src xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=flag.php" >]>
+<foo>&xxe;</foo>
+#+end_src
+
+The result will be that the =flag.php= file is encoded in Base64 and added to the result that is shown on the page.
+
+#+CAPTION: Successfull payload
+[[file:index_att/payload.png]]
+
+Copy the base64 into CyberChef and read the PHP code. There is a flag in =$flag=.
+
+#+CAPTION: The flag
+[[file:index_att/flag.png]]
+
+Grab your points and your badge! The challenge is solved.
+
+#+CAPTION: The badge
+[[file:index_att/badge.png]]
+Go back to the [[../../../index.org][homepage]].
